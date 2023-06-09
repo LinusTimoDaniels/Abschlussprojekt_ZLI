@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../CSS/navbar.css";
-import Logo from '../components/logo';
+import "./navbar.css";
 
 function NavBar() {
   const [click, setClick] = useState(false);
@@ -12,7 +11,7 @@ function NavBar() {
       <nav className="navbar">
         <div className="nav-container">
           <NavLink exact to="/" className="nav-logo">
-            <Logo />
+            <img src="https://wochenberichte.ictblj.ch/wochenberichte/api_02/danlin/images/Abschlussprojekt/Logo.png" alt="Logo" className="nav-logo" />
             <i className="fas fa-code"></i>
           </NavLink>
 
@@ -31,34 +30,45 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/contact"
+                to="/Nutritonplan"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                About
+                Nutriton Plan
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink
                 exact
-                to="/blog"
+                to="/MyRecipes"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                Blog
+                My Recipes
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink
                 exact
-                to="/contact"
+                to="/Bookmarks"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                Contact Us
+                Bookmarks
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/Contact"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                Contact
               </NavLink>
             </li>
           </ul>

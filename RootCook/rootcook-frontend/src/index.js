@@ -17,7 +17,34 @@ const router = createBrowserRouter([
     </div>
   },
    {
-    path: "ContactPage",
+    path: "Contact",
+    element:
+    <div>
+      <ContactPage />
+    </div>
+
+
+  },
+   {
+    path: "Nutritonplan",
+    element:
+    <div>
+      <ContactPage />
+    </div>
+
+
+  },
+   {
+    path: "MyRecipes",
+    element:
+    <div>
+      <ContactPage />
+    </div>
+
+
+  },
+   {
+    path: "Bookmarks",
     element:
     <div>
       <ContactPage />
