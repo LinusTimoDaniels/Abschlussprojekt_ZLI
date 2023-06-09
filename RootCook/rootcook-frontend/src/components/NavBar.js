@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "./navbar.css";
+import "./NavBar.css";
 
 function NavBar() {
   const [click, setClick] = useState(false);
@@ -11,8 +11,7 @@ function NavBar() {
       <nav className="navbar">
         <div className="nav-container">
           <NavLink exact to="/" className="nav-logo">
-            <img src="https://wochenberichte.ictblj.ch/wochenberichte/api_02/danlin/images/Abschlussprojekt/Logo.png" alt="Logo" className="nav-logo" />
-            <i className="fas fa-code"></i>
+            <img src="https://wochenberichte.ictblj.ch/wochenberichte/api_02/danlin/images/Abschlussprojekt/Logo.png" className="nav-logo"></img>
           </NavLink>
 
           <ul className={click ? "nav-menu active" : "nav-menu"}>
@@ -30,18 +29,7 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/Nutritonplan"
-                activeClassName="active"
-                className="nav-links"
-                onClick={handleClick}
-              >
-                Nutriton Plan
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                exact
-                to="/MyRecipes"
+                to="/myrecipes"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -52,7 +40,18 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/Bookmarks"
+                to="/nutritionplan"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                Nutrition Plan
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/bookmarks"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
@@ -63,12 +62,23 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/Contact"
+                to="/contact"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                Contact
+                contact
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/login"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                Login
               </NavLink>
             </li>
           </ul>
