@@ -1,5 +1,8 @@
 #search-form{
   margin: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .parallax{
@@ -16,8 +19,81 @@
   background-size: cover;
 }
 
+#query{
+  font-size: medium;
+  height: 50px;
+  width: 300px;
+  color: white;
+  border-radius: 5px;
+  background-color: #1f5156;
+  margin-right: 10px;
+}
+
 .placeholder{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 300px;
-  width: 100%;
+  max-width: 100%;
   background-color: #b5fac7;
+  flex-wrap: wrap;
+  opacity: 1 !important;
+}
+
+.recipe-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #1f5156;
+  border-radius: 5px;
+  width: 400px;
+  height: 500px;
+  margin: 25px;
+  color: #ffffff;
+  position: relative;
+}
+
+.recipe-image{
+  max-width: 300px;
+  max-height: 250px;
+  object-fit: cover;
+  object-position: 25% 25%;
+  border-radius: 5px;
+  position: absolute;
+}
+
+.recipe-title{
+  position: absolute;
+  top: 5px;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#submit{
+  font-size: medium;
+  height: 50px;
+  width: 100px;
+  color: white;
+  border-radius: 5px;
+  background-color: #1f5156;
+}
+
+.more-btn{
+  border: none;
+  font-size: medium;
+  border-radius: 5px;
+  background-color: #b5fac7;
+  min-width: 120px;
+  min-height: 40px;
+  position: absolute;
+  bottom: 10px;
+  left: 35%;
+}
+
+@media (max-width: 375px) {
+  .recipe-image {
+    width: 200px;
+  }
 }

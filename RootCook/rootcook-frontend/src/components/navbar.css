@@ -1,6 +1,6 @@
 .navbar {
   background-color: #1f5156;
-  height: 80px;
+  height: 90px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,7 +69,8 @@
 
 .nav-item .active {
   color: #ffdd40;
-  border: 1px solid #ffdd40;
+  border: 2px solid #ffdd40;
+  border-radius: 5px;
 }
 
 .nav-icon {
