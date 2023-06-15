@@ -3,6 +3,7 @@ const pool = require('./database');
 const app = express();
 const PORT = 8080;
 
+
 // Enable CORS for all routes
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,8 +12,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  pool.query('SELECT * FROM recipes', (error, results) => {
+app.get('/recipe', (req, res) => {
+  pool.query(`SELECT * FROM recipe`, (error, results) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -22,15 +23,8 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/:id', (req, res) => {
-  pool.query(`SELECT * FROM recipes WHERE title LIKE '%${req.params.id}%'`, (error, results) => {
-    if (error) {
-      console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
-    } else {
-      res.json(results);
-    }
-  });
+app.post('/login', () => {
+
 });
 
 

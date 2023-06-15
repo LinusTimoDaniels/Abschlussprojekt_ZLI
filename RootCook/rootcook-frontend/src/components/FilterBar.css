@@ -1,0 +1,36 @@
+.filter-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.filter-object{
+  max-width: 150px;
+  font-size: 30px;
+}
+
+.sort-bar-object{
+  color: #ffffff;
+  background-color: #6c757d;
+  max-width: 150px;
+  font-size: 30px;
+}
+
+.sort-bar-object-left{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.sort-bar-object-right{
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.sort-bar-object-sort{
+  border-radius: 5px;
+}
+
+.filter-bar, .sort-bar{
+    margin: 20px;
+}
