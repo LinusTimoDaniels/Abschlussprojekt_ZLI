@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('./database');
 const app = express();
 const PORT = 8080;
+const IP_ADDRESS = '127.0.0.1';
 
 
 // Enable CORS for all routes
@@ -28,6 +29,6 @@ app.post('/login', () => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`App listening on Port: ${PORT}`);
+app.listen(PORT, IP_ADDRESS, () => {
+  console.log(`Server is running on ${IP_ADDRESS}:${PORT}`);
 });

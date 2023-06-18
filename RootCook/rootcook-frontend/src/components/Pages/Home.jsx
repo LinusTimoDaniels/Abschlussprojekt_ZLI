@@ -1,91 +1,253 @@
-import React, { useEffect, useState } from 'react';
-import FilterBar from '../FilterBar';
-import './Home.css';
+import React, { useEffect, useState } from "react";
+import FilterBar from "../FilterBar";
+import "./Home.css";
 
 export const Home = () => {
-  const [data, setData] = useState([]); // State variable to hold the fetched data
-  const [view, setView] = useState([]); // State variable to hold the filtered and sorted view of data
-  const [filter, setFilter] = useState({ query: '', sort: '', category: '' }); // State variable for filters
+  // State variables
+  const [data, setData] = useState([]); // Stores the fetched data
+  const [filteredData, setFilteredData] = useState([]); // Stores the filtered and sorted data
+  const [filter, setFilter] = useState({ query: "", sort: "", category: "" }); // Stores the filter criteria
+  const [caloriesRange, setCaloriesRange] = useState([0, 10000]);
+  const [proteinRange, setProteinRange] = useState([0, 10000]);
+  const [fibresRange, setFibresRange] = useState([0, 10000]);
+  const [fatRange, setFatRange] = useState([0, 10000]);
+  const [sugarRange, setSugarRange] = useState([0, 10000]);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    applyFiltersAndSort();
+  }, [
+    data,
+    filter,
+    caloriesRange,
+    proteinRange,
+    fibresRange,
+    fatRange,
+    sugarRange,
+  ]);
+
+  useEffect(() => {
+    console.log("caloriesRange:", caloriesRange);
+  }, [caloriesRange]);
+
+  useEffect(() => {
+    console.log("proteinRange:", proteinRange);
+  }, [proteinRange]);
+
+  useEffect(() => {
+    console.log("fibresRange:", fibresRange);
+  }, [fibresRange]);
+
+  useEffect(() => {
+    console.log("fatRange:", fatRange);
+  }, [fatRange]);
+
+  useEffect(() => {
+    console.log("sugarRange:", sugarRange);
+  }, [sugarRange]);
+
+  // Fetches data from the server
   const fetchData = () => {
-    fetch('http://127.0.0.1:8080/recipe')
-      .then(response => response.json())
-      .then(responseData => {
-        console.log('responseData:', responseData);
-        setData(responseData);
-        console.log('data:', data);
+    fetch("http://127.0.0.1:8080/recipe")
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("responseData:", responseData);
+        setData(responseData); // Updates the data state with the fetched data
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   };
 
-  useEffect(() => {
-    // Fetch data from the backend on component mount
-    fetchData();
-  }, []);
-
+  // Handles the form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchData();
+    fetchData(); // Fetches the data again when the form is submitted
   };
 
+  // Handles the query input change
   const handleQueryChange = (event) => {
-    setFilter(prevFilter => ({
+    setFilter((prevFilter) => ({
       ...prevFilter,
-      query: event.target.value
+      query: event.target.value,
     }));
   };
 
+  // Handles the sort criteria change
   const handleSortChange = (sortValue) => {
-    setFilter(prevFilter => ({
+    setFilter((prevFilter) => ({
       ...prevFilter,
-      sort: sortValue
+      sort: sortValue,
+    }));
+  };
+
+  // Handles the category filter change
+  const handleCategoryChange = (categoryValue) => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      category: categoryValue,
     }));
   };
 
   useEffect(() => {
-    // Apply filtering and sorting logic here whenever data or filter values change
-    let filteredData = data;
+    applyFiltersAndSort();
+  }, [data, filter]);
+
+  // Applies filters and sorts the data based on the filter criteria
+  const applyFiltersAndSort = () => {
+    let tempData = [...data];
 
     if (filter.query) {
-      // Filter recipes based on the query
-      filteredData = filteredData.filter(recipe =>
+      // Filters the data based on the query
+      tempData = tempData.filter((recipe) =>
         recipe.title.toLowerCase().includes(filter.query.toLowerCase())
       );
     }
 
-    if (filter.sort === 'ASC') {
-      // Sort recipes in ascending order by title
-      filteredData.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (filter.sort === 'DESC') {
-      // Sort recipes in descending order by title
-      filteredData.sort((a, b) => b.title.localeCompare(a.title));
+    if (filter.category && filter.category !== "5") {
+      // Filters the data based on the selected category
+      tempData = tempData.filter(
+        (recipe) => recipe.Categorie_id === parseInt(filter.category)
+      );
     }
 
-    setView(filteredData); // Update the view with filtered and sorted data
-  }, [data, filter]);
+    // Filter by calories range
+    tempData = tempData.filter((recipe) => {
+      const calories = recipe.calories;
+      return calories >= caloriesRange[0] && calories <= caloriesRange[1];
+    });
+
+    // Filter by protein range
+    tempData = tempData.filter((recipe) => {
+      const protein = recipe.protein;
+      return protein >= proteinRange[0] && protein <= proteinRange[1];
+    });
+
+    // Filter by fibres range
+    tempData = tempData.filter((recipe) => {
+      const fibres = recipe.fibres;
+      return fibres >= fibresRange[0] && fibres <= fibresRange[1];
+    });
+
+    // Filter by fat range
+    tempData = tempData.filter((recipe) => {
+      const fat = recipe.fat;
+      return fat >= fatRange[0] && fat <= fatRange[1];
+    });
+
+    // Filter by sugar range
+    tempData = tempData.filter((recipe) => {
+      const sugar = recipe.sugar;
+      return sugar >= sugarRange[0] && sugar <= sugarRange[1];
+    });
+
+    if (filter.sort === "title ASC") {
+      // Sorts the data in ascending order based on the recipe title
+      tempData.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (filter.sort === "title DESC") {
+      // Sorts the data in descending order based on the recipe title
+      tempData.sort((a, b) => b.title.localeCompare(a.title));
+    } else if (filter.sort === "calories ASC") {
+      // Sorts the data in ascending order based on the calories
+      tempData.sort((a, b) =>
+        a.calories.toString().localeCompare(b.calories.toString())
+      );
+    } else if (filter.sort === "calories DESC") {
+      // Sorts the data in descending order based on the calories
+      tempData.sort((a, b) =>
+        b.calories.toString().localeCompare(a.calories.toString())
+      );
+    } else if (filter.sort === "protein ASC") {
+      // Sorts the data in ascending order based on the protein
+      tempData.sort((a, b) =>
+        a.protein.toString().localeCompare(b.protein.toString())
+      );
+    } else if (filter.sort === "protein DESC") {
+      // Sorts the data in descending order based on the protein
+      tempData.sort((a, b) =>
+        b.protein.toString().localeCompare(a.protein.toString())
+      );
+    } else if (filter.sort === "fibres ASC") {
+      // Sorts the data in ascending order based on the fibres
+      tempData.sort((a, b) =>
+        a.fibres.toString().localeCompare(b.fibres.toString())
+      );
+    } else if (filter.sort === "fibres DESC") {
+      // Sorts the data in descending order based on the fibres
+      tempData.sort((a, b) =>
+        b.fibres.toString().localeCompare(a.fibres.toString())
+      );
+    } else if (filter.sort === "sugar ASC") {
+      // Sorts the data in ascending order based on the sugar
+      tempData.sort((a, b) =>
+        a.sugar.toString().localeCompare(b.sugar.toString())
+      );
+    } else if (filter.sort === "sugar DESC") {
+      // Sorts the data in descending order based on the sugar
+      tempData.sort((a, b) =>
+        b.sugar.toString().localeCompare(a.sugar.toString())
+      );
+    } else if (filter.sort === "fat ASC") {
+      // Sorts the data in ascending order based on the fat
+      tempData.sort((a, b) => a.fat.toString().localeCompare(b.fat.toString()));
+    } else if (filter.sort === "fat DESC") {
+      // Sorts the data in descending order based on the fat
+      tempData.sort((a, b) => b.fat.toString().localeCompare(a.fat.toString()));
+    }
+
+    setFilteredData(tempData); // Updates the filteredData state with the filtered and sorted data
+  };
 
   return (
     <div>
-      <h1 id='home-title'>Welcome to RootCook</h1>
+      <h1 id="home-title">Welcome to RootCook</h1>
       <form id="search-form" onSubmit={handleSubmit}>
-        <input type="text" id='query' value={filter.query} onChange={handleQueryChange} />
+        <input
+          type="text"
+          id="query"
+          value={filter.query}
+          onChange={handleQueryChange}
+        />
         <input type="submit" id="submit" value="Submit" />
       </form>
 
-      <FilterBar sort={filter.sort} setSort={handleSortChange} />
+      <FilterBar
+        sort={filter.sort}
+        setSort={handleSortChange}
+        category={filter.category}
+        setCategory={handleCategoryChange}
+        caloriesRange={caloriesRange}
+        setCaloriesRange={setCaloriesRange}
+        fibresRange={fibresRange}
+        setFibresRange={setFibresRange}
+        proteinRange={proteinRange}
+        setProteinRange={setProteinRange}
+        fatRange={fatRange}
+        setFatRange={setFatRange}
+        sugarRange={sugarRange}
+        setSugarRange={setSugarRange}
+      />
 
       <div className="parallax"></div>
       <div className="placeholder">
-        {view.map((recipe, index) => (
+        {/* Renders the filtered data */}
+        {filteredData.map((recipe, index) => (
           <div key={index} className="recipe-item">
-            <h3 className='recipe-title'>{recipe.title}</h3>
-            <img src={recipe.image} className='recipe-image' alt={recipe.title} />
-            <button className='more-btn'>More</button>
+            <h3 className="recipe-title">{recipe.title}</h3>
+            <img
+              src={recipe.image}
+              className="recipe-image"
+              alt={recipe.title}
+            />
+            <button className="more-btn">More</button>
           </div>
         ))}
       </div>
     </div>
   );
 };
+
+export default Home;

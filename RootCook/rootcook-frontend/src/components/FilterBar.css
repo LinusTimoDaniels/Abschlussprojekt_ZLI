@@ -13,6 +13,7 @@
 .sort-bar-object{
   color: #ffffff;
   background-color: #6c757d;
+  min-height: 65px;
   max-width: 150px;
   font-size: 30px;
 }
@@ -32,5 +33,119 @@
 }
 
 .filter-bar, .sort-bar{
-    margin: 20px;
+  margin: 5px;
+  margin-bottom: 25px;
+}
+
+
+.filter-object1{
+ font-size: 30px;
+ color: #ffffff;
+ background-color: #6c757d;
+}
+
+.range-slider-container{
+  width: 200px;
+  color: #ffffff;
+  position: relative;
+  background-color: #6c757d;
+}
+
+/* @media screen and (max-width: 1300px) {
+  .range-slider-container {
+    width: 150px;
+  }
+  .range-slider-container h1{
+   font-size: 20px !important;
+}
+}
+
+@media screen and (max-width: 1120px) {
+  .range-slider-container {
+    width: 125px;
+  }
+  .range-slider-container h1{
+   font-size: 15px !important;
+}
+}
+
+@media screen and (max-width: 1000px) {
+  .range-slider-container {
+    width: 100px;
+  }
+  .range-slider-container h1{
+   font-size: 10px !important;
+}
+}
+
+@media screen and (max-width: 870px) {
+  .range-slider-container {
+    width: 40px;
+  }
+  .range-slider-container h1{
+   font-size: 8px !important;
+}
+} */
+
+.range-slider-container h1{
+  padding: 10px;
+  font-size: 30px;
+}
+
+.slider {
+    height: 10px;
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Styles for the slider thumb */
+.slider .thumb {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: grab;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles for the slider active state */
+.slider .thumb.active {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.slider-item{
+  display: none;
+  z-index: 100;
+  position: absolute;
+  color: #ffffff;
+  font-size: 30px;
+  max-width: 300px;
+  max-height: auto;
+}
+
+.range-slider-container:hover{
+  .slider-item{
+    display: block;
+    background-color: #6c757d;
+  }
+}
+
+
+.slider-item input{
+  background-color: #d3d3d4;
+  margin: 5px;
+  max-width: 100px;
+  border: none;
+  border-radius: 5px;
+}
+
+.range-bar-container{
+  margin: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
