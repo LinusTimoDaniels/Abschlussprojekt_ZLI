@@ -1,16 +1,23 @@
 import "./App.css";
+import { useState } from "react";
 import NavBar from "./components/NavBar";
-import Footer from './components/Footer';
-import { BrowserRouter as Router,  Route, Routes } from "react-router-dom";
+import Footer from "./components/Footer";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home } from "./components/Pages/Home";
 import { Nutritionplan } from "./components/Pages/Nutritionplan";
 import { MyRecipes } from "./components/Pages/MyRecipes";
 import { Contact } from "./components/Pages/Contact";
 import { Bookmarks } from "./components/Pages/Bookmarks";
 import { Login } from "./components/Pages/Login";
-
+import { Register } from "./components/Pages/Register";
 
 function App() {
+  const [currentForm, setCurrentFrom] = useState("login");
+
+  const toggleForm = (formName) => {
+    setCurrentFrom(formName);
+  };
+
   return (
     <>
       <Router>
@@ -22,14 +29,24 @@ function App() {
             <Route path="/nutritionplan" element={<Nutritionplan />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login">
+              <Route
+                path="/login"
+                element={
+                  currentForm === "login" ? (
+                    <Login onFormSwitch={toggleForm} />
+                  ) : (
+                    <Register onFormSwitch={toggleForm} />
+                  )
+                }
+              />
+            </Route>
           </Routes>
         </div>
 
-        <Footer/>
-
+        <Footer />
       </Router>
-  </>
+    </>
   );
 }
 
