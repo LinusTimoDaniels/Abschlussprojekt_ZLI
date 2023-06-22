@@ -118,3 +118,15 @@
     color: #ffdd40;
   }
 }
+
+#logout-btn {
+  color: #fff;
+  padding: 0px 10px;
+  border-radius: 5px;
+  background: none;
+  border: 2px solid #ffdd40;
+}
+
+#logout-btn:hover{
+  background-color: #ffdd40;
+}

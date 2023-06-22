@@ -1,47 +1,92 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import Cookies from "js-cookie";
 import "./Login.css";
 
-export const Login = (props) => {
+export const Login = ({ props, setUser, user }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
+
+    const loginData = {
+      email: email,
+      password: password,
+      username: name,
+    };
+
+    // Make a POST request to the /login endpoint
+    fetch("http://127.0.0.1:8080/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(loginData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          console.error("Error logging in:", data.error);
+        } else {
+          console.log("Login successful:", data);
+          console.log(data.accessToken);
+          console.log("local", localStorage.getItem("login"));
+          localStorage.setItem("login", JSON.stringify(data.accessToken));
+          setUser(loginData.username);
+          console.log(user);
+          console.log(data.accessToken);
+          Cookies.set("jwt", data.refreshToken);
+          window.location = "http://127.0.0.1:3000/";
+        }
+
+        // Optionally, you can perform some action after successful login
+      })
+      .catch((error) => {
+        console.error("Error logging in:", error);
+        // Handle error condition, display error message, etc.
+      });
   };
 
   return (
     <div className="auth-form-container1">
       <div className="auth-form-container">
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email">email</label>
+          <label htmlFor="name">Username</label>
           <br />
           <input
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="username"
+            id="name"
+            name="name"
+          />
+          <br />
+          <label htmlFor="email">Email</label>
+          <br />
+          <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="example@email.com"
             id="email"
             name="email"
           />
           <br />
-          <label htmlFor="password">password</label>
+          <label htmlFor="password">Password</label>
           <br />
           <input
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="***********"
             id="password"
             name="password"
-          /> 
+          />
           <br />
-          <button>Log In</button>
+          <button type="submit">Log In</button>
         </form>
 
         <button onClick={() => props.onFormSwitch("register")} id="btn2">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FilterBar from "../FilterBar";
 import "./Home.css";
 
-export const Home = () => {
+export const Home = ({ user }) => {
   // State variables
   const [data, setData] = useState([]); // Stores the fetched data
   const [filteredData, setFilteredData] = useState([]); // Stores the filtered and sorted data
@@ -51,14 +51,20 @@ export const Home = () => {
 
   // Fetches data from the server
   const fetchData = () => {
-    fetch("http://127.0.0.1:8080/recipe")
+    const token = JSON.parse(localStorage.getItem("login"));
+
+    fetch("http://127.0.0.1:8080/recipe", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => response.json())
       .then((responseData) => {
         console.log("responseData:", responseData);
         setData(responseData); // Updates the data state with the fetched data
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching data:", error);
       });
   };
 
@@ -94,6 +100,7 @@ export const Home = () => {
 
   useEffect(() => {
     applyFiltersAndSort();
+    console.log("user: ", user);
   }, [data, filter]);
 
   // Applies filters and sorts the data based on the filter criteria
@@ -203,7 +210,7 @@ export const Home = () => {
 
   return (
     <div>
-      <h1 id="home-title">Welcome to RootCook</h1>
+      <h1 id="home-title">Welcome to RootCook {user}</h1>
       <form id="search-form" onSubmit={handleSubmit}>
         <input
           type="text"

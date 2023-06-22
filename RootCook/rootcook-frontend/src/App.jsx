@@ -14,6 +14,8 @@ import { Register } from "./components/Pages/Register";
 function App() {
   const [currentForm, setCurrentFrom] = useState("login");
 
+  const [user, setUser] = useState('');
+
   const toggleForm = (formName) => {
     setCurrentFrom(formName);
   };
@@ -24,19 +26,39 @@ function App() {
         <NavBar />
         <div className="pages">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/myrecipes" element={<MyRecipes />} />
-            <Route path="/nutritionplan" element={<Nutritionplan />} />
-            <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/" element={<Home user={user} setUser={setUser} />} />
+            <Route
+              path="/myrecipes"
+              element={<MyRecipes user={user} setUser={setUser} />}
+            />
+            <Route
+              path="/nutritionplan"
+              element={<Nutritionplan user={user} setUser={setUser} />}
+            />
+            <Route
+              path="/bookmarks"
+              element={<Bookmarks user={user} setUser={setUser} />}
+            />
+            <Route
+              path="/contact"
+              element={<Contact user={user} setUser={setUser} />}
+            />
             <Route path="/login">
               <Route
                 path="/login"
                 element={
                   currentForm === "login" ? (
-                    <Login onFormSwitch={toggleForm} />
+                    <Login
+                      onFormSwitch={toggleForm}
+                      user={user}
+                      setUser={setUser}
+                    />
                   ) : (
-                    <Register onFormSwitch={toggleForm} />
+                    <Register
+                      onFormSwitch={toggleForm}
+                      user={user}
+                      setUser={setUser}
+                    />
                   )
                 }
               />
