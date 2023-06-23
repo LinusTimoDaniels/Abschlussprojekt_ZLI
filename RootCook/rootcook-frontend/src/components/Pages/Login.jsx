@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Cookies from "js-cookie";
 import "./Login.css";
 
-export const Login = ({ props, setUser, user }) => {
+export const Login = ({ onFormSwitch, user, setUser }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +22,6 @@ export const Login = ({ props, setUser, user }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify(loginData),
     })
       .then((response) => response.json())
@@ -34,10 +33,12 @@ export const Login = ({ props, setUser, user }) => {
           console.log(data.accessToken);
           console.log("local", localStorage.getItem("login"));
           localStorage.setItem("login", JSON.stringify(data.accessToken));
-          setUser(loginData.username);
-          console.log(user);
+          const userName = loginData.username;
+          setUser(userName);
+          console.log("user", user);
           console.log(data.accessToken);
           Cookies.set("jwt", data.refreshToken);
+          //TODO set timeout
           window.location = "http://127.0.0.1:3000/";
         }
 
@@ -89,7 +90,7 @@ export const Login = ({ props, setUser, user }) => {
           <button type="submit">Log In</button>
         </form>
 
-        <button onClick={() => props.onFormSwitch("register")} id="btn2">
+        <button onClick={() => onFormSwitch("register")} id="btn2">
           Don't have an account yet? <p>Register here.</p>
         </button>
       </div>

@@ -1,0 +1,73 @@
+.recipe-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 45% 10% 54%;
+  background-color: #6c757d;
+  max-width: 80%;
+  max-height: 1000px;
+  margin: 50px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.recipe-container-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-title-1{
+  position: relative;
+  font-size: 100px;
+}
+
+.recipe-image-1{
+  width: 90%;
+  height: 90%;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.recipe-description-1 h3{
+  font-size: 30px;
+  padding: 10px;
+}
+
+.recipe-description-1 li{
+  font-size: 20px;
+  padding: 5px;
+}
+
+.recipe-description-1{
+  background-color: #80909c;
+  width: 90%;
+  height: 90%;
+  margin: 20px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.recipe-ingredients-list{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: start;
+}
+
+.bookmarks-btn{
+  color: #ffffff;
+  width: 90%;
+  border: 5px solid #ffdd40;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.bookmarks-btn:hover{
+  background-color: #ffdd40;
+}
+
+.bookmarked{
+  background-color: #ed1111;
+}

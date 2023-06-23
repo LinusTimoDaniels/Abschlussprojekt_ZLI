@@ -66,7 +66,7 @@ function NavBar() {
     // Call handleRefreshToken immediately
 
     // Set up interval to call handleRefreshToken every 5 minutes
-    const intervalId = setInterval(handleRefreshToken, 5 * 60 * 1000);
+    const intervalId = setInterval(handleRefreshToken, 60 * 1000);
 
     // Clean up the interval on component unmount
     return () => {

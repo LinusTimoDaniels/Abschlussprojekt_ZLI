@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import FilterBar from "../FilterBar";
 import "./Home.css";
 
-export const Home = ({ user }) => {
+export const Home = ({ user, setUser, setRecipe }) => {
   // State variables
   const [data, setData] = useState([]); // Stores the fetched data
   const [filteredData, setFilteredData] = useState([]); // Stores the filtered and sorted data
@@ -100,7 +101,7 @@ export const Home = ({ user }) => {
 
   useEffect(() => {
     applyFiltersAndSort();
-    console.log("user: ", user);
+    /* console.log("user: ", user); */
   }, [data, filter]);
 
   // Applies filters and sorts the data based on the filter criteria
@@ -249,7 +250,31 @@ export const Home = ({ user }) => {
               className="recipe-image"
               alt={recipe.title}
             />
-            <button className="more-btn">More</button>
+            <NavLink
+              className="more-btn-link"
+              exact
+              to="/recipe"
+              onClick={() => {
+                setRecipe({
+                  id: recipe.id,
+                  title: recipe.title,
+                  description: recipe.description,
+                  image: recipe.image,
+                  instructions: recipe.instructions,
+                  calories: recipe.calories,
+                  protein: recipe.protein,
+                  fat: recipe.fat,
+                  fibres: recipe.fibres,
+                  sugar: recipe.sugar,
+                  published: recipe.published,
+                  userid: recipe.user_id,
+                  categorieid: recipe.categorie_id,
+                  mealtypeid: recipe.meal_type_id,
+                });
+              }}
+            >
+              <button className="more-btn">More</button>
+            </NavLink>
           </div>
         ))}
       </div>

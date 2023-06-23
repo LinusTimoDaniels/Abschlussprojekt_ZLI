@@ -134,16 +134,25 @@
 }
 
 .more-btn{
-  border: none;
+  border: 5px solid #ffdd40;
+  background-color: transparent;
   font-size: medium;
   border-radius: 5px;
-  background-color: #ffdd40;
   min-width: 120px;
   min-height: 40px;
   position: absolute;
   bottom: 10px;
   left: 35%;
   color: #ffffff;
+}
+
+.more-btn:hover{
+    background-color: #ffdd40;
+}
+
+.more-btn-link{
+    color: #ffffff;
+    text-decoration: none;
 }
 
 @media (max-width: 375px) {

@@ -12,7 +12,9 @@ const verifyJWT = require('./verifyJWT');
 const cookieParser = require('cookie-parser');
 const refreshTokenController = require('./refreshTokenController');
 const logoutController = require('./logoutController');
+const cors = require('cors');
 
+app.use(cors());
 
 //Middleware for cookies
 app.use(cookieParser());
@@ -38,7 +40,7 @@ app.get('/logout', logoutController.handleLogout);
 
 
 app.get('/recipe', verifyJWT, (req, res) => {
-  pool.query(`SELECT * FROM recipe`, (error, results) => {
+  pool.query(`SELECT * FROM recipe WHERE published = 0`, (error, results) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -156,6 +158,47 @@ app.post('/register', (req, res) => {
   );
 });
 
+
+app.get('/user', verifyJWT, (req, res) => {
+  const cookie = req.query.jwt;
+  console.log(cookie);
+  if (!cookie) return res.sendStatus(401);
+  pool.query(`SELECT id, username FROM user WHERE REFRESH_TOKEN = ?`, [cookie], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+app.get('/bookmarks', verifyJWT, (req, res) => {
+  const UserId = req.query.user;
+  console.log(UserId);
+    pool.query(`SELECT r.* FROM Recipe AS r JOIN Bookmarks AS b ON r.id = b.Recipe_id WHERE b.User_id = ?`, [UserId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      console.log(result);
+      res.json(result);
+    }
+  });
+});
+
+app.post('/bookmarks', verifyJWT, (req, res) => {
+  const UserId = req.body.user;
+  const RecipeId = req.body.recipe;
+    pool.query(`INSERT INTO bookmarks (Recipe_id, User_id) VALUES ( ?, ?)`, [RecipeId, UserId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
 
 
 app.listen(PORT, IP_ADDRESS, () => {
