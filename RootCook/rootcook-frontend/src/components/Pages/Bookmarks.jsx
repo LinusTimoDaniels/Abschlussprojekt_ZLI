@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Bookmarks.css";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
+import swal from "sweetalert";
 
 export const Bookmarks = ({ setRecipe }) => {
   const [userId, setUserId] = useState(null);
@@ -22,10 +23,18 @@ export const Bookmarks = ({ setRecipe }) => {
             },
           }
         );
+
+        if (response.status === 403) {
+          throw new Error("You need to login");
+        }
+
         const responseData = await response.json();
         setUserId(responseData[0].id);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        if (error.message === "You need to login") {
+          swal("info", `Error fetching user data: ${error.message}`, "info");
+        }
       }
     };
 
@@ -46,7 +55,14 @@ export const Bookmarks = ({ setRecipe }) => {
           }
         );
         const responseData = await response.json();
-        setFilteredData(responseData);
+        console.log(responseData);
+        if (Array.isArray(responseData)) {
+          setFilteredData(responseData);
+        } else if (responseData) {
+          setFilteredData([responseData]);
+        } else {
+          setFilteredData([]);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -59,7 +75,7 @@ export const Bookmarks = ({ setRecipe }) => {
 
   return (
     <div>
-      <h1>Bookmarks</h1>
+      <h1 id="home-title">Bookmarks</h1>
       <div className="placeholder">
         {/* Renders the filtered data */}
         {filteredData.map((recipe, index) => (

@@ -39,7 +39,7 @@ app.get('/logout', logoutController.handleLogout);
 
 
 
-app.get('/recipe', verifyJWT, (req, res) => {
+app.get('/recipe', (req, res) => {
   const UserId = req.query.user;
   const Query = UserId
   ? "SELECT recipe.*, meal_type.type FROM recipe JOIN meal_type ON recipe.meal_type_id = meal_type.id WHERE recipe.User_id = ?"
@@ -126,7 +126,11 @@ app.post('/login', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, password1 } = req.body;
+
+  if (password !== password1) {
+    res.status(400).json({ error: 'Passworts dont match!' });
+  }
 
   // Check if the user already exists
   pool.query(
@@ -219,7 +223,7 @@ app.delete('/bookmarks', verifyJWT, (req, res) => {
   });
 });
 
-app.get('/ingredients', verifyJWT, (req, res) => {
+app.get('/ingredients', (req, res) => {
   const RecipeId = req.query.recipe;
     pool.query(`SELECT i.id, i.name, rhi.amount FROM Recipe r JOIN Recipe_has_Ingredient rhi ON r.id = rhi.Recipe_id JOIN Ingredient i ON rhi.Ingredient_id = i.id WHERE r.id = ?;`, [RecipeId], (error, result) => {
     if (error) {

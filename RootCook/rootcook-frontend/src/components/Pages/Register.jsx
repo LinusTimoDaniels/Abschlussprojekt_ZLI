@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
+import swal from "sweetalert";
 
 export const Register = (props) => {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ export const Register = (props) => {
       username: name,
       email: email,
       password: password,
+      password1: password1,
     };
 
     // Make a POST request to the /register endpoint
@@ -28,6 +30,7 @@ export const Register = (props) => {
       .then((data) => {
         if (data.error) {
           console.error("Error while registrating:", data.error);
+          swal("info", `Error while registrating: ${data.error}`, "info");
         } else {
           console.log("Registration successful:", data);
           props.onFormSwitch("login");
@@ -42,60 +45,63 @@ export const Register = (props) => {
   };
 
   return (
-    <div className="auth-form-container1">
-      <div className="auth-form-container">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Username</label>
-          <br />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            name="name"
-            id="name"
-            placeholder="Username"
-          />
-          <br />
-          <label htmlFor="email">Email</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-            id="email"
-            name="email"
-          />
-          <br />
-          <label htmlFor="password">Password</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="***********"
-            id="password"
-            name="password"
-          />
-          <br />
-          <label htmlFor="password1">Confirm Password</label>
-          <br />
-          <input
-            type="password"
-            value={password1}
-            onChange={(e) => setPassword1(e.target.value)}
-            placeholder="***********"
-            id="password1"
-            name="password1"
-          />
-          <br />
-          <button type="submit">Register</button>
-        </form>
+    <>
+      <h1 id="home-title">Register</h1>
+      <div className="auth-form-container1">
+        <div className="auth-form-container">
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">Username</label>
+            <br />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              name="name"
+              id="name"
+              placeholder="Username"
+            />
+            <br />
+            <label htmlFor="email">Email</label>
+            <br />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              id="email"
+              name="email"
+            />
+            <br />
+            <label htmlFor="password">Password</label>
+            <br />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="***********"
+              id="password"
+              name="password"
+            />
+            <br />
+            <label htmlFor="password1">Confirm Password</label>
+            <br />
+            <input
+              type="password"
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+              placeholder="***********"
+              id="password1"
+              name="password1"
+            />
+            <br />
+            <button type="submit">Register</button>
+          </form>
 
-        <button onClick={() => props.onFormSwitch("login")} id="btn2">
-          Already have an account? <p>Login here.</p>
-        </button>
+          <button onClick={() => props.onFormSwitch("login")} id="btn2">
+            Already have an account? <p>Login here.</p>
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

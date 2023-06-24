@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
+import "./MyRecipes.css";
+import swal from "sweetalert";
 
 export const MyRecipes = ({ setRecipe }) => {
   const [userId, setUserId] = useState(null);
@@ -21,10 +23,18 @@ export const MyRecipes = ({ setRecipe }) => {
             },
           }
         );
+
+        if (response.status === 403) {
+          throw new Error("You need to login");
+        }
+
         const responseData = await response.json();
         setUserId(responseData[0].id);
       } catch (error) {
         console.error("Error fetching user data:", error);
+        if (error.message === "You need to login") {
+          swal("info", `Error fetching user data: ${error.message}`, "info");
+        }
       }
     };
 
@@ -46,6 +56,7 @@ export const MyRecipes = ({ setRecipe }) => {
         );
         const responseData = await response.json();
         setFilteredData(responseData);
+        console.log(responseData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -58,7 +69,8 @@ export const MyRecipes = ({ setRecipe }) => {
 
   return (
     <div>
-      <h1>My Recipes</h1>
+      <h1 id="home-title">My Recipes</h1>
+      <button className="add-recipe-btn">Add Recipe</button>
       <div className="placeholder">
         {/* Renders the filtered data */}
         {filteredData.map((recipe, index) => (

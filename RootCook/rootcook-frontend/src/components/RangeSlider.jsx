@@ -23,7 +23,7 @@ const RangeSlider = ({ values, onChange }) => {
         value={values}
         onChange={handleChange}
         min={0}
-        max={10000}
+        max={1000}
       />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>

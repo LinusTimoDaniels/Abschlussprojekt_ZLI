@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import FilterBar from "../FilterBar";
 import "./Home.css";
+import Cookies from "js-cookie";
 
-export const Home = ({ user, setUser, setRecipe }) => {
+export const Home = ({ setRecipe }) => {
   // State variables
   const [data, setData] = useState([]); // Stores the fetched data
   const [filteredData, setFilteredData] = useState([]); // Stores the filtered and sorted data
   const [filter, setFilter] = useState({ query: "", sort: "", category: "" }); // Stores the filter criteria
-  const [caloriesRange, setCaloriesRange] = useState([0, 10000]);
-  const [proteinRange, setProteinRange] = useState([0, 10000]);
-  const [fibresRange, setFibresRange] = useState([0, 10000]);
-  const [fatRange, setFatRange] = useState([0, 10000]);
-  const [sugarRange, setSugarRange] = useState([0, 10000]);
+  const [caloriesRange, setCaloriesRange] = useState([0, 1000]);
+  const [proteinRange, setProteinRange] = useState([0, 1000]);
+  const [fibresRange, setFibresRange] = useState([0, 1000]);
+  const [fatRange, setFatRange] = useState([0, 1000]);
+  const [sugarRange, setSugarRange] = useState([0, 1000]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -29,6 +31,30 @@ export const Home = ({ user, setUser, setRecipe }) => {
     fatRange,
     sugarRange,
   ]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const cookie = Cookies.get("jwt");
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/user?jwt=${cookie}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const responseData = await response.json();
+        setUser(responseData[0].username);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     console.log("caloriesRange:", caloriesRange);

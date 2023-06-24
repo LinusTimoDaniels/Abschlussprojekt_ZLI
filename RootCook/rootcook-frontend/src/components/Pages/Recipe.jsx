@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Recipe.css";
 import Cookies from "js-cookie";
+import swal from "sweetalert";
 
 export const Recipe = ({ recipe }) => {
   const [userId, setUserId] = useState(null);
@@ -134,10 +135,18 @@ export const Recipe = ({ recipe }) => {
   };
 
   const handleBookmark = () => {
-    if (isBookmarked) {
-      deleteBookmark();
-    } else {
-      addBookmark();
+    try {
+      if (userId) {
+        if (isBookmarked) {
+          deleteBookmark();
+        } else {
+          addBookmark();
+        }
+      } else {
+        throw new Error("You need to login");
+      }
+    } catch (error) {
+      swal("info", `Error, edditing bookmark ${error.message}`, "info");
     }
   };
 
