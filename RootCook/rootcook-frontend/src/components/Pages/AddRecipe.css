@@ -1,0 +1,164 @@
+.addrecipe-container-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.addrecipe-container {
+  font-size: 30px;
+  color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px;
+  width: 60%;
+  min-height: 1500px;
+  background: #6c757d;
+  border-radius: 5px;
+  }
+
+.nutritional-values {
+  font-size: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: center;
+  border-radius: 5px;
+  width: 90%;
+}
+
+.nutritional-values input {
+  width: 75% !important;
+}
+
+.nutritional-values label {
+  width: 25% !important;
+}
+
+.addrecipe-container input,
+  textarea,
+  label,
+  select {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  width: 90%;
+  border: none;
+}
+
+#submit-btn {
+  width: 90%;
+  border-radius: 5px;
+  color: #ffffff;
+  background-color: transparent;
+  border: 5px solid #ffdd40;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#submit-btn:hover {
+  background-color: #ffdd40;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider {
+  position: relative;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ffdd40;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ffdd40;
+  cursor: pointer;
+}
+
+.calories-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.protein-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.fibres-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.fat-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.sugar-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.calories-div span{
+  position: relative;
+  left: 50px;
+}
+
+.protein-div span{
+  position: relative;
+  left: 50px;
+}
+
+.fibres-div span{
+  position: relative;
+  left: 50px;
+}
+
+.fat-div span{
+  position: relative;
+  left: 50px;
+}
+
+.sugar-div span{
+  position: relative;
+  left: 50px;
+}

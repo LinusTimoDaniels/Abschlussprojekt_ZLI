@@ -32,22 +32,23 @@ export const Login = ({ onFormSwitch, user, setUser }) => {
           swal("info", `Error logging in: ${data.error}`, "info");
         } else {
           console.log("Login successful:", data);
+          swal("info", "You have successfully logged in", "success");
           console.log(data.accessToken);
           console.log("local", localStorage.getItem("login"));
           localStorage.setItem("login", JSON.stringify(data.accessToken));
           const userName = loginData.username;
           setUser(userName);
-          console.log("user", user);
-          console.log(data.accessToken);
           Cookies.set("jwt", data.refreshToken);
-          //TODO set timeout
-          window.location = "http://127.0.0.1:3000/";
+          setTimeout(() => {
+            window.location = "http://127.0.0.1:3000/";
+          }, 2000);
         }
 
         // Optionally, you can perform some action after successful login
       })
       .catch((error) => {
         console.error("Error logging in:", error);
+        swal("error", error, "error");
         // Handle error condition, display error message, etc.
       });
   };

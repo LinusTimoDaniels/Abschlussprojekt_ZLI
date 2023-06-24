@@ -276,32 +276,34 @@ export const Home = ({ setRecipe }) => {
               className="recipe-image"
               alt={recipe.title}
             />
-            <NavLink
-              className="more-btn-link"
-              exact
-              to="/recipe"
-              onClick={() => {
-                setRecipe({
-                  id: recipe.id,
-                  title: recipe.title,
-                  description: recipe.description,
-                  image: recipe.image,
-                  instructions: recipe.instructions,
-                  calories: recipe.calories,
-                  protein: recipe.protein,
-                  fat: recipe.fat,
-                  fibres: recipe.fibres,
-                  sugar: recipe.sugar,
-                  published: recipe.published,
-                  userid: recipe.user_id,
-                  categorieid: recipe.categorie_id,
-                  mealtypeid: recipe.meal_type_id,
-                  mealtype: recipe.type,
-                });
-              }}
-            >
-              <button className="more-btn">More</button>
-            </NavLink>
+            <div className="btn-container">
+              <NavLink
+                className="more-btn-link"
+                exact
+                to="/recipe"
+                onClick={() => {
+                  setRecipe({
+                    id: recipe.id,
+                    title: recipe.title,
+                    description: recipe.description,
+                    image: recipe.image,
+                    instructions: recipe.instructions,
+                    calories: recipe.calories,
+                    protein: recipe.protein,
+                    fat: recipe.fat,
+                    fibres: recipe.fibres,
+                    sugar: recipe.sugar,
+                    published: recipe.published,
+                    userid: recipe.user_id,
+                    categorieid: recipe.categorie_id,
+                    mealtypeid: recipe.meal_type_id,
+                    mealtype: recipe.type,
+                  });
+                }}
+              >
+                <button className="more-btn">More</button>
+              </NavLink>
+            </div>
           </div>
         ))}
       </div>

@@ -11,6 +11,7 @@ import { Bookmarks } from "./components/Pages/Bookmarks";
 import { Login } from "./components/Pages/Login";
 import { Register } from "./components/Pages/Register";
 import { Recipe } from "./components/Pages/Recipe";
+import { AddRecipe } from "./components/Pages/AddRecipe";
 
 function App() {
   const [currentForm, setCurrentFrom] = useState("login");
@@ -104,6 +105,17 @@ function App() {
               path="/recipe"
               element={
                 <Recipe
+                  recipe={recipe}
+                  setRecipe={setRecipe}
+                  user={user}
+                  setUser={setUser}
+                />
+              }
+            />
+            <Route
+              path="/addrecipe"
+              element={
+                <AddRecipe
                   recipe={recipe}
                   setRecipe={setRecipe}
                   user={user}

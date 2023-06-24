@@ -34,12 +34,16 @@ export const Register = (props) => {
         } else {
           console.log("Registration successful:", data);
           props.onFormSwitch("login");
-          window.location = "http://127.0.0.1:3000/login";
+          swal("info", "You have successfully registerd", "success");
+          setTimeout(() => {
+            window.location = "http://127.0.0.1:3000/login";
+          }, 2000);
         }
         // Optionally, you can redirect to a different page after successful registration
       })
       .catch((error) => {
         console.error("Error registering user:", error);
+        swal("error", error.message, "error");
         // Handle error condition, display error message, etc.
       });
   };

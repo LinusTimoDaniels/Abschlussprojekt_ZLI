@@ -30,3 +30,17 @@
       -25px 51px 1px #eaeaea,
       -26px 53px 1px #efefef;
 }
+
+.btn-container{
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  bottom: 20px;
+}
+
+.more-btn{
+  margin: 5px;
+  position: sticky;
+}

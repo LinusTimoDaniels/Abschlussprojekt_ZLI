@@ -56,6 +56,56 @@ app.get('/recipe', (req, res) => {
 });
 
 
+app.post('/recipe', verifyJWT, (req, res) => {
+  const { title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId } = req.body;
+
+if (
+  !title ||
+  !description ||
+  !image ||
+  !instructions ||
+  !calories ||
+  !protein ||
+  !fibres ||
+  !fat ||
+  !sugar ||
+  !published ||
+  !categorie ||
+  !mealtype ||
+  !userId
+) {
+  return res.status(400).json({ error: "Data incomplete" });
+}
+
+    pool.query(`INSERT INTO recipe (title, description, image, instructions, calories, protein, fibres, fat, sugar, published, Categorie_id, meal_type_id, User_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId], (error, results) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+
+app.put('/recipe', verifyJWT, () => {
+
+});
+
+
+app.delete('/recipe', verifyJWT, (req, res) => {
+  const recipeId = req.query.recipe;
+    pool.query(`DELETE FROM recipe WHERE recipe.id = ?`, [recipeId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
 app.post('/login', (req, res) => {
   const { username, email, password } = req.body;
   pool.query(
