@@ -270,6 +270,7 @@ export const Home = ({ user, setUser, setRecipe }) => {
                   userid: recipe.user_id,
                   categorieid: recipe.categorie_id,
                   mealtypeid: recipe.meal_type_id,
+                  mealtype: recipe.type,
                 });
               }}
             >

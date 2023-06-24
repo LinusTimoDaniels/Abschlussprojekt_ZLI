@@ -2,87 +2,150 @@ import React, { useEffect, useState } from "react";
 import "./Recipe.css";
 import Cookies from "js-cookie";
 
-export const Recipe = ({ recipe, setRecipe }) => {
-  const [userId, setUserId] = useState();
-  const [token, setToken] = useState("");
-  const [isBookmarked, setIsBookmarked] = useState(false);
-
-  const fetchUser = () => {
-    const cookie = Cookies.get("jwt");
-    const token = JSON.parse(localStorage.getItem("login"));
-
-    return fetch(`http://127.0.0.1:8080/user?jwt=${cookie}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        setUserId(responseData[0].id);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  const getBookmark = () => {
-    setToken(JSON.parse(localStorage.getItem("login")));
-    console.log("useriddddd", userId);
-    fetch(`http://127.0.0.1:8080/bookmarks?user=${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log("Bookmarks:", responseData);
-        setIsBookmarked(
-          responseData.some((item) => item.User_id === recipe.id)
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  const addBookmark = () => {
-    const token = JSON.parse(localStorage.getItem("login"));
-
-    fetch("http://127.0.0.1:8080/bookmarks", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: userId,
-        recipe: recipe.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log("responseData:", responseData);
-        setIsBookmarked(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
+export const Recipe = ({ recipe }) => {
+  const [userId, setUserId] = useState(null);
+  const [isBookmarked, setIsBookmarked] = useState(null);
+  const [ingredient, setIngredient] = useState({});
 
   useEffect(() => {
-    fetchUser().then(() => getBookmark());
+    console.log(isBookmarked);
+  }, [isBookmarked]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const cookie = Cookies.get("jwt");
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/user?jwt=${cookie}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const responseData = await response.json();
+        setUserId(responseData[0].id);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   useEffect(() => {
-    fetchUser().then(() => getBookmark());
-  }, [token]);
+    const fetchIngredient = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/ingredients?recipe=${recipe.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const responseData = await response.json();
+        setIngredient(responseData);
+        console.log(ingredient);
+      } catch (error) {
+        console.error("Error fetching ingredients data:", error);
+      }
+    };
+
+    fetchIngredient();
+  }, [recipe]);
+
+  useEffect(() => {
+    const getBookmark = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("login"));
+        const response = await fetch(
+          `http://127.0.0.1:8080/bookmarks?user=${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const responseData = await response.json();
+        setIsBookmarked(responseData.some((item) => item.id === recipe.id));
+        console.log("recipeid", recipe.id);
+        console.log("bookmarks", responseData);
+        console.log("userid", userId);
+      } catch (error) {
+        console.error("Error fetching bookmark data:", error);
+      }
+    };
+
+    if (userId) {
+      getBookmark();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (recipe && isBookmarked === null) {
+      setIsBookmarked(recipe.isBookmarked);
+    }
+  }, [recipe]);
+
+  const addBookmark = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("login"));
+      await fetch("http://127.0.0.1:8080/bookmarks", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userId,
+          recipe: recipe.id,
+        }),
+      });
+      setIsBookmarked(true);
+    } catch (error) {
+      console.error("Error adding bookmark:", error);
+    }
+  };
+
+  const deleteBookmark = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("login"));
+      await fetch("http://127.0.0.1:8080/bookmarks", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userId,
+          recipe: recipe.id,
+        }),
+      });
+      setIsBookmarked(false);
+    } catch (error) {
+      console.error("Error deleting bookmark:", error);
+    }
+  };
+
+  const handleBookmark = () => {
+    if (isBookmarked) {
+      deleteBookmark();
+    } else {
+      addBookmark();
+    }
+  };
 
   return (
     <div className="recipe-container-container">
       <h1 className="recipe-title-1">{recipe.title}</h1>
       <div className="recipe-container">
-        <div>
+        <div className="recipe-image-1-container">
           <img
             className="recipe-image-1"
             src={recipe.image}
@@ -99,21 +162,37 @@ export const Recipe = ({ recipe, setRecipe }) => {
             <li>Sugar: {recipe.sugar} g</li>
           </ul>
         </div>
-        <div>
+        <div className="recipe-mealtype">
+          <h3>{recipe.mealtype}</h3>
+        </div>
+        <div className="bookmarks-btn-container">
           <button
-            className={`bookmarks-btn ${isBookmarked ? "bookmarked" : ""}`}
-            onClick={isBookmarked ? null : addBookmark}
-            disabled={isBookmarked}
+            className={`bookmarks-btn ${
+              isBookmarked === null ? "" : isBookmarked ? "bookmarked" : ""
+            }`}
+            onClick={handleBookmark}
           >
-            {isBookmarked ? "Bookmarked" : "Bookmark"}
-            {isBookmarked ? console.log("true") : console.log("false")}
+            {isBookmarked === null
+              ? "Loading..."
+              : isBookmarked
+              ? "delete Bookmark"
+              : "Bookmark"}
           </button>
         </div>
-        <div>
-          <p>{recipe.instructions}</p>
+        <div className="recipe-instructions-1">
+          <div className="recipe-instructions">
+            <p>{recipe.instructions}</p>
+          </div>
         </div>
-        <div>
-          <p>{recipe.instructions}</p>
+        <div className="recipe-ingredients">
+          <ul>
+            {Object.keys(ingredient).map((item, index) => (
+              <li key={index}>
+                {ingredient[item].name} {ingredient[item].amount}
+                {console.log(ingredient[item].name, recipe.mealtype)}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

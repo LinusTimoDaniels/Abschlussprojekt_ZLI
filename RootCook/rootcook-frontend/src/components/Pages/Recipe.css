@@ -1,14 +1,14 @@
 .recipe-container{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 45% 10% 54%;
+  grid-template-rows: 45% 10% 45%;
   background-color: #6c757d;
-  max-width: 80%;
-  max-height: 1000px;
+  width: 60%;
+  height: 1000px;
   margin: 50px;
   border-radius: 5px;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .recipe-container-container{
@@ -23,42 +23,20 @@
   font-size: 100px;
 }
 
-.recipe-image-1{
-  width: 90%;
-  height: 90%;
-  border-radius: 5px;
-  margin: 20px;
-}
-
 .recipe-description-1 h3{
-  font-size: 30px;
+  font-size: 20px;
   padding: 10px;
 }
 
 .recipe-description-1 li{
-  font-size: 20px;
+  font-size: 15px;
   padding: 5px;
-}
-
-.recipe-description-1{
-  background-color: #80909c;
-  width: 90%;
-  height: 90%;
-  margin: 20px;
-  border-radius: 5px;
-  padding: 10px;
-}
-
-.recipe-ingredients-list{
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: start;
 }
 
 .bookmarks-btn{
   color: #ffffff;
   width: 90%;
+  height: 50%;
   border: 5px solid #ffdd40;
   border-radius: 5px;
   background-color: transparent;
@@ -70,4 +48,96 @@
 
 .bookmarked{
   background-color: #ed1111;
+}
+
+.recipe-ingredients-list{
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: start;
+}
+
+.recipe-image-1{
+  border-radius: 5px;
+}
+
+@media (max-width: 800px) {
+  .recipe-container{
+    font-size: 10px;
+    height: 800px;
+  }
+  .recipe-description-1 h3{
+    font-size: 10px;
+  }
+  .recipe-description-1 ul li{
+    font-size: 10px;
+  }
+}
+
+.recipe-image-1-container{
+  grid-column: 1;
+  grid-row: 1;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-description-1{
+  grid-column: 2;
+  grid-row: 1;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-mealtype{
+  grid-column: 2;
+  grid-row: 2;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmarks-btn-container{
+  grid-column: 1;
+  grid-row: 2;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-instructions-1 {
+  grid-column: 2;
+  grid-row: 3;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-ingredients{
+  grid-column: 1;
+  grid-row: 3;
+  background-color: #80909c;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

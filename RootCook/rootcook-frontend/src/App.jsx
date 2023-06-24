@@ -32,6 +32,7 @@ function App() {
     userid: "",
     categorieid: "",
     mealtypeid: "",
+    mealtype: "",
   });
 
   const toggleForm = (formName) => {
@@ -52,7 +53,13 @@ function App() {
             />
             <Route
               path="/myrecipes"
-              element={<MyRecipes user={user} setUser={setUser} />}
+              element={
+                <MyRecipes
+                  user={user}
+                  setUser={setUser}
+                  setRecipe={setRecipe}
+                />
+              }
             />
             <Route
               path="/nutritionplan"

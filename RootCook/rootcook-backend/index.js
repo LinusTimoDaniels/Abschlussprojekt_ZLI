@@ -40,7 +40,12 @@ app.get('/logout', logoutController.handleLogout);
 
 
 app.get('/recipe', verifyJWT, (req, res) => {
-  pool.query(`SELECT * FROM recipe WHERE published = 0`, (error, results) => {
+  const UserId = req.query.user;
+  const Query = UserId
+  ? "SELECT recipe.*, meal_type.type FROM recipe JOIN meal_type ON recipe.meal_type_id = meal_type.id WHERE recipe.User_id = ?"
+  : "SELECT recipe.*, meal_type.type FROM recipe JOIN meal_type ON recipe.meal_type_id = meal_type.id WHERE published = 0";
+
+  pool.query(Query, [UserId], (error, results) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -176,7 +181,7 @@ app.get('/user', verifyJWT, (req, res) => {
 app.get('/bookmarks', verifyJWT, (req, res) => {
   const UserId = req.query.user;
   console.log(UserId);
-    pool.query(`SELECT r.* FROM Recipe AS r JOIN Bookmarks AS b ON r.id = b.Recipe_id WHERE b.User_id = ?`, [UserId], (error, result) => {
+    pool.query(`SELECT r.*, meal_type.type FROM Recipe AS r JOIN Bookmarks AS b ON r.id = b.Recipe_id JOIN meal_type ON r.meal_type_id = meal_type.id WHERE b.User_id = ?`, [UserId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -200,6 +205,31 @@ app.post('/bookmarks', verifyJWT, (req, res) => {
   });
 });
 
+
+app.delete('/bookmarks', verifyJWT, (req, res) => {
+  const UserId = req.body.user;
+  const RecipeId = req.body.recipe;
+    pool.query(`DELETE FROM bookmarks WHERE Recipe_id = ? AND User_id = ?`, [RecipeId, UserId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+app.get('/ingredients', verifyJWT, (req, res) => {
+  const RecipeId = req.query.recipe;
+    pool.query(`SELECT i.id, i.name, rhi.amount FROM Recipe r JOIN Recipe_has_Ingredient rhi ON r.id = rhi.Recipe_id JOIN Ingredient i ON rhi.Ingredient_id = i.id WHERE r.id = ?;`, [RecipeId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
 
 app.listen(PORT, IP_ADDRESS, () => {
   console.log(`Server is running on ${IP_ADDRESS}:${PORT}`);

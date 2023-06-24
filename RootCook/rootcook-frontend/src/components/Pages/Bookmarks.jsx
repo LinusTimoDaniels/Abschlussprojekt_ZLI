@@ -3,59 +3,59 @@ import "./Bookmarks.css";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 
-export const Bookmarks = ({ recipe, setRecipe }) => {
-  const [USERID, setUSERID] = useState("");
+export const Bookmarks = ({ setRecipe }) => {
+  const [userId, setUserId] = useState(null);
   const [token, setToken] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
-  const fetchUser = () => {
-    const cookie = Cookies.get("jwt");
-    const storedToken = JSON.parse(localStorage.getItem("login"));
-
-    fetch(`http://127.0.0.1:8080/user?jwt=${cookie}`, {
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        const userId = responseData[0].id;
-        setUSERID(userId);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
-  };
-
-  const getBookmark = () => {
-    setToken(JSON.parse(localStorage.getItem("login")));
-    console.log(USERID);
-    fetch(`http://127.0.0.1:8080/bookmarks?user=${USERID}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log("Bookmarks:", responseData);
-        setFilteredData(responseData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const cookie = Cookies.get("jwt");
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/user?jwt=${cookie}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const responseData = await response.json();
+        setUserId(responseData[0].id);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
     fetchUser();
-    getBookmark();
   }, []);
 
   useEffect(() => {
-    if (USERID) {
+    const getBookmark = async () => {
+      try {
+        setToken(JSON.parse(localStorage.getItem("login")));
+        const response = await fetch(
+          `http://127.0.0.1:8080/bookmarks?user=${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const responseData = await response.json();
+        setFilteredData(responseData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (userId) {
       getBookmark();
     }
-  }, [USERID]);
+  }, [userId, token]);
 
   return (
     <div>
@@ -87,9 +87,10 @@ export const Bookmarks = ({ recipe, setRecipe }) => {
                   fibres: recipe.fibres,
                   sugar: recipe.sugar,
                   published: recipe.published,
-                  USERID: recipe.user_id,
+                  userid: recipe.user_id,
                   categorieid: recipe.categorie_id,
                   mealtypeid: recipe.meal_type_id,
+                  mealtype: recipe.type,
                 });
               }}
             >
