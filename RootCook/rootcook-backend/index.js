@@ -59,6 +59,8 @@ app.get('/recipe', (req, res) => {
 app.post('/recipe', verifyJWT, (req, res) => {
   const { title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId } = req.body;
 
+  console.log(title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId);
+
 if (
   !title ||
   !description ||
@@ -69,7 +71,6 @@ if (
   !fibres ||
   !fat ||
   !sugar ||
-  !published ||
   !categorie ||
   !mealtype ||
   !userId
@@ -273,9 +274,9 @@ app.delete('/bookmarks', verifyJWT, (req, res) => {
   });
 });
 
-app.get('/ingredients', (req, res) => {
+app.get('/ingredients', verifyJWT, (req, res) => {
   const RecipeId = req.query.recipe;
-    pool.query(`SELECT i.id, i.name, rhi.amount FROM Recipe r JOIN Recipe_has_Ingredient rhi ON r.id = rhi.Recipe_id JOIN Ingredient i ON rhi.Ingredient_id = i.id WHERE r.id = ?;`, [RecipeId], (error, result) => {
+    pool.query(`SELECT i.id, i.name, rhi.amount FROM Recipe r JOIN Recipe_has_Ingredient rhi ON r.id = rhi.Recipe_id JOIN Ingredient i ON rhi.Ingredient_id = i.id WHERE r.id = ?`, [RecipeId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });
@@ -284,6 +285,19 @@ app.get('/ingredients', (req, res) => {
     }
   });
 });
+
+
+app.get('/ingredients/all', verifyJWT, (req, res) => {
+    pool.query(`SELECT * FROM Ingredient`, (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
 
 app.listen(PORT, IP_ADDRESS, () => {
   console.log(`Server is running on ${IP_ADDRESS}:${PORT}`);

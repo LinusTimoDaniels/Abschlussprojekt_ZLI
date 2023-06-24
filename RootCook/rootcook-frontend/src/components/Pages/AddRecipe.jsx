@@ -15,9 +15,15 @@ export const AddRecipe = () => {
   const [fat, setFat] = useState(1);
   const [sugar, setSugar] = useState(1);
   const [published, setPublished] = useState(false);
-  const [categorie, setCategorie] = useState("");
-  const [mealtype, setMealtype] = useState("");
+  const [categorie, setCategorie] = useState("1");
+  const [mealtype, setMealtype] = useState("1");
   const [userId, setUserId] = useState(null);
+  const [ingredient, setIngredient] = useState({});
+  const [showDiv, setShowDiv] = useState(false);
+
+  useEffect(() => {
+    console.log("showDiv:", showDiv);
+  }, [showDiv]);
 
   useEffect(() => {
     console.log("Calories:", calories);
@@ -76,6 +82,27 @@ export const AddRecipe = () => {
     postRecipe(); // Fetches the data again when the form is submitted
   };
 
+  useEffect(() => {
+    const fetchIngredient = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(`http://127.0.0.1:8080/ingredients/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const responseData = await response.json();
+        setIngredient(responseData);
+        console.log("ingredients", responseData);
+      } catch (error) {
+        console.error("Error fetching ingredients data:", error);
+      }
+    };
+
+    fetchIngredient();
+  }, []);
+
   const postRecipe = () => {
     const recipeData = {
       title: title,
@@ -103,7 +130,12 @@ export const AddRecipe = () => {
       },
       body: JSON.stringify(recipeData),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error posting recipe");
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Response from server:", data);
         swal("success", "You have successfully added a recipe!", "success");
@@ -114,7 +146,11 @@ export const AddRecipe = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        swal("info", `Error fetching user data: ${error.message}`, "info");
+        swal(
+          "error",
+          `Error posting recipe, please make sure to fill out all the fields! ${error.message}`,
+          "error"
+        );
         // Handle any errors that occur during the request
       });
   };
@@ -123,7 +159,7 @@ export const AddRecipe = () => {
     <div>
       <h1 id="home-title">AddRecipe</h1>
       <div className="addrecipe-container-container">
-        <form className="addrecipe-container" onSubmit={handleSubmit}>
+        <form className="addrecipe-container">
           <label htmlFor="title">Title:</label>
           <input
             type="text"
@@ -263,7 +299,38 @@ export const AddRecipe = () => {
             <option value="4">Snacks</option>
             <option value="5">Dessert</option>
           </select>
-          <input type="submit" value="Submit" id="submit-btn" />
+          <label htmlFor="ingredients">Ingredients:</label>
+          <div className="ingredients-div">
+            <input
+              type="text"
+              name="ingredients"
+              id="ingredients"
+              onFocus={() => setShowDiv(true)}
+              onBlur={() => setShowDiv(false)}
+            />
+            <button>Add</button>
+          </div>
+          <div
+            className={`${
+              showDiv
+                ? "ingredients-div-search-show"
+                : "ingredients-div-search-hide"
+            } ingredients-div-search`}
+          >hallo</div>
+          <div className="ingredients-div-list">
+            {Object.values(ingredient).map((item, index) => (
+              <div className="ingredients-item" key={index}>
+                <h3>{item.name}</h3>
+                <input type="text" />
+              </div>
+            ))}
+          </div>
+          <input
+            type="submit"
+            value="Submit"
+            id="submit-btn"
+            onClick={handleSubmit}
+          />
         </form>
       </div>
     </div>

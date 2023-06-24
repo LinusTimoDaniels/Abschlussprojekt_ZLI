@@ -18,7 +18,7 @@
   min-height: 1500px;
   background: #6c757d;
   border-radius: 5px;
-  }
+}
 
 .nutritional-values {
   font-size: 25px;
@@ -39,9 +39,9 @@
 }
 
 .addrecipe-container input,
-  textarea,
-  label,
-  select {
+textarea,
+label,
+select {
   margin-top: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
@@ -98,7 +98,7 @@
   cursor: pointer;
 }
 
-.calories-div{
+.calories-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -106,7 +106,7 @@
   width: 90%;
 }
 
-.protein-div{
+.protein-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -114,7 +114,7 @@
   width: 90%;
 }
 
-.fibres-div{
+.fibres-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -122,7 +122,7 @@
   width: 90%;
 }
 
-.fat-div{
+.fat-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -130,7 +130,7 @@
   width: 90%;
 }
 
-.sugar-div{
+.sugar-div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -138,27 +138,142 @@
   width: 90%;
 }
 
-.calories-div span{
+.ingredients-div-list:hover {
+  display: flex;
+}
+
+.ingredients-div-search-show{
+    /* position: absolute; */
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  min-height: 200px;
+  display: flex;
+}
+
+.ingredients-div-search-hide{
+    /* position: absolute; */
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  min-height: 200px;
+  display: none;
+}
+
+.ingredients-div-search {
+  /* position: absolute; */
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  min-height: 200px;
+  display: none;
+}
+
+.ingredients-div-list {
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  min-height: 200px;
+}
+
+
+.ingredients-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  background-color: #6c757d;
+  border: 5px solid #ffdd40;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ingredients-item input {
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 20%;
+}
+
+.ingredients-item h3 {
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 80%;
+}
+
+.ingredients-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.ingredients-div input {
+  width: 90%;
+  margin-right: 20px;
+}
+
+.ingredients-div button {
+  border: 5px solid #ffdd40;
+  color: #ffffff;
+  width: 30%;
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.ingredients-div button:hover {
+  background-color: #ffdd40;
+}
+
+.calories-div span {
   position: relative;
   left: 50px;
 }
 
-.protein-div span{
+.protein-div span {
   position: relative;
   left: 50px;
 }
 
-.fibres-div span{
+.fibres-div span {
   position: relative;
   left: 50px;
 }
 
-.fat-div span{
+.fat-div span {
   position: relative;
   left: 50px;
 }
 
-.sugar-div span{
+.sugar-div span {
   position: relative;
   left: 50px;
 }

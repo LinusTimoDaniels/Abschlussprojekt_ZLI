@@ -43,30 +43,30 @@ export const MyRecipes = ({ setRecipe }) => {
   }, []);
 
   useEffect(() => {
-    const getRecipes = async () => {
-      try {
-        setToken(JSON.parse(localStorage.getItem("login")));
-        const response = await fetch(
-          `http://127.0.0.1:8080/recipe?user=${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const responseData = await response.json();
-        setFilteredData(responseData);
-        console.log(responseData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     if (userId) {
       getRecipes();
     }
   }, [userId, token]);
+
+  const getRecipes = async () => {
+    try {
+      setToken(JSON.parse(localStorage.getItem("login")));
+      const response = await fetch(
+        `http://127.0.0.1:8080/recipe?user=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = await response.json();
+      setFilteredData(responseData);
+      console.log(responseData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const deleteRecipe = async (recipeId) => {
     try {
@@ -81,12 +81,17 @@ export const MyRecipes = ({ setRecipe }) => {
           },
         }
       );
-      const responseData = await response.json();
-      console.log(responseData);
-      swal("DELETED", "You have successfully deleted the recipe", "success");
+
+      if (response.ok) {
+        swal("DELETED", "You have successfully deleted the recipe", "success");
+        // Fetch recipes again to get the updated list
+        getRecipes();
+      } else {
+        throw new Error("Failed to delete recipe");
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
-      swal("Failed", `failed to delete recipe: ${error.message}`, "error");
+      swal("Failed", `Failed to delete recipe: ${error.message}`, "error");
     }
   };
 
