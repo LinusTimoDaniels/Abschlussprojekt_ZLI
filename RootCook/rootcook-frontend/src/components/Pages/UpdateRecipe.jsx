@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import "./AddRecipe.css";
+import "./UpdateRecipe.css";
 import swal from "sweetalert";
 import Cookies from "js-cookie";
 
-export const AddRecipe = () => {
+export const UpdateRecipe = ({ recipe }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
@@ -22,6 +22,32 @@ export const AddRecipe = () => {
   const [ingredientShow, setIngredientShow] = useState({});
   const [filterIngredient, setFilterIngredient] = useState([]);
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setTitle(recipe.title);
+    setDescription(recipe.description);
+    setImage(recipe.image);
+    setInstructions(recipe.instructions);
+    setCalories(recipe.calories);
+    setProtein(recipe.protein);
+    setFibres(recipe.fibres);
+    setFat(recipe.fat);
+    setSugar(recipe.sugar);
+    setPublished(recipe.published);
+    setCategorie(recipe.categorieid);
+    if (recipe.mealtype == "Breakfast") {
+      setMealtype(1);
+    } else if (recipe.mealtype == "Lunch") {
+      setMealtype(2);
+    } else if (recipe.mealtype == "Dinner") {
+      setMealtype(3);
+    } else if (recipe.mealtype == "Snacks") {
+      setMealtype(4);
+    } else if (recipe.mealtype == "Dessert") {
+      setMealtype(5);
+    }
+    setFilterIngredient([]);
+  }, []);
 
   useEffect(() => {
     if (!query) {
@@ -133,6 +159,30 @@ export const AddRecipe = () => {
     fetchIngredient();
   }, []);
 
+  useEffect(() => {
+    const fetchRecipeHasIngredient = async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("login"));
+
+        const response = await fetch(
+          `http://127.0.0.1:8080/recipehasingredient?recipe=${recipe.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const responseData = await response.json();
+        setFilterIngredient(responseData);
+        console.log("recipe_has_ingredient", responseData);
+      } catch (error) {
+        console.error("Error fetching recipe_has_ingredient", error);
+      }
+    };
+
+    fetchRecipeHasIngredient();
+  }, []);
+
   const postRecipe = () => {
     const recipeData = {
       title: title,
@@ -200,7 +250,7 @@ export const AddRecipe = () => {
 
   return (
     <div>
-      <h1 id="home-title">Add Recipe</h1>
+      <h1 id="home-title">Update Recipe</h1>
       <div className="addrecipe-container-container">
         <form className="addrecipe-container">
           <label htmlFor="title">Title:</label>
@@ -420,7 +470,7 @@ export const AddRecipe = () => {
           </div>
           <input
             type="submit"
-            value="Submit"
+            value="Apply"
             id="submit-btn"
             onClick={handleSubmit}
           />

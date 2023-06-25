@@ -12,6 +12,7 @@ import { Login } from "./components/Pages/Login";
 import { Register } from "./components/Pages/Register";
 import { Recipe } from "./components/Pages/Recipe";
 import { AddRecipe } from "./components/Pages/AddRecipe";
+import { UpdateRecipe } from "./components/Pages/UpdateRecipe";
 
 function App() {
   const [currentForm, setCurrentFrom] = useState("login");
@@ -58,6 +59,7 @@ function App() {
                 <MyRecipes
                   user={user}
                   setUser={setUser}
+                  recipe={recipe}
                   setRecipe={setRecipe}
                 />
               }
@@ -116,6 +118,17 @@ function App() {
               path="/addrecipe"
               element={
                 <AddRecipe
+                  recipe={recipe}
+                  setRecipe={setRecipe}
+                  user={user}
+                  setUser={setUser}
+                />
+              }
+            />
+            <Route
+              path="/updaterecipe"
+              element={
+                <UpdateRecipe
                   recipe={recipe}
                   setRecipe={setRecipe}
                   user={user}

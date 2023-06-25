@@ -5,7 +5,7 @@ import "./MyRecipes.css";
 import swal from "sweetalert";
 import { Recipe } from "./Recipe";
 
-export const MyRecipes = ({ setRecipe }) => {
+export const MyRecipes = ({ recipe, setRecipe }) => {
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -129,16 +129,44 @@ export const MyRecipes = ({ setRecipe }) => {
                     fibres: recipe.fibres,
                     sugar: recipe.sugar,
                     published: recipe.published,
-                    userid: recipe.user_id,
-                    categorieid: recipe.categorie_id,
+                    userid: recipe.User_id,
+                    categorieid: recipe.Categorie_id,
                     mealtypeid: recipe.meal_type_id,
                     mealtype: recipe.type,
                   });
                 }}
               >
                 <button className="more-btn">More</button>
+                {console.log(
+                  "recipe.categorie_id",
+                  recipe.User_id,
+                  recipe.Categorie_id, recipe.title
+                )}
               </NavLink>
-              <NavLink className="more-btn-link">
+              <NavLink
+                className="more-btn-link"
+                exact
+                to="/updaterecipe"
+                onClick={() => {
+                  setRecipe({
+                    id: recipe.id,
+                    title: recipe.title,
+                    description: recipe.description,
+                    image: recipe.image,
+                    instructions: recipe.instructions,
+                    calories: recipe.calories,
+                    protein: recipe.protein,
+                    fat: recipe.fat,
+                    fibres: recipe.fibres,
+                    sugar: recipe.sugar,
+                    published: recipe.published,
+                    userid: recipe.user_id,
+                    categorieid: recipe.Categorie_id,
+                    mealtypeid: recipe.meal_type_id,
+                    mealtype: recipe.type,
+                  });
+                }}
+              >
                 <button className="more-btn">Edit</button>
               </NavLink>
               <NavLink className="more-btn-link">

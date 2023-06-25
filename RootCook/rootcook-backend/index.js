@@ -438,6 +438,19 @@ app.get('/ingredients/all', verifyJWT, (req, res) => {
   });
 });
 
+app.get('/recipehasingredient', verifyJWT, (req, res) => {
+  const RecipeId = req.query.recipe;
+  console.log("RecipeId", RecipeId);
+  pool.query(`SELECT i.name, rhi.amount FROM recipe_has_ingredient AS rhi JOIN Ingredient AS i ON rhi.Ingredient_id = i.id WHERE Recipe_id = ?`, [RecipeId], (error, result) => {
+    if (error) {
+      console.error('Error executing query', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } else {
+      res.json(result);
+    }
+  })
+})
+
 
 app.listen(PORT, IP_ADDRESS, () => {
   console.log(`Server is running on ${IP_ADDRESS}:${PORT}`);
