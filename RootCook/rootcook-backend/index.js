@@ -56,37 +56,177 @@ app.get('/recipe', (req, res) => {
 });
 
 
-app.post('/recipe', verifyJWT, (req, res) => {
-  const { title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId } = req.body;
+app.post('/recipe', verifyJWT, async (req, res) => {
+  const { title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId } = req.body.recipeData;
 
-  console.log(title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId);
+  const filterIngredients = req.body.filterIngredients;
 
-if (
-  !title ||
-  !description ||
-  !image ||
-  !instructions ||
-  !calories ||
-  !protein ||
-  !fibres ||
-  !fat ||
-  !sugar ||
-  !categorie ||
-  !mealtype ||
-  !userId
-) {
-  return res.status(400).json({ error: "Data incomplete" });
-}
+  console.log("Recipe", title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId);
 
-    pool.query(`INSERT INTO recipe (title, description, image, instructions, calories, protein, fibres, fat, sugar, published, Categorie_id, meal_type_id, User_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId], (error, results) => {
+  if (
+    !title ||
+    !description ||
+    !image ||
+    !instructions ||
+    !calories ||
+    !protein ||
+    !fibres ||
+    !fat ||
+    !sugar ||
+    !categorie ||
+    !mealtype ||
+    !userId
+  ) {
+    return res.status(400).json({ error: "Data incomplete" });
+  }
+
+  pool.query(`INSERT INTO recipe (title, description, image, instructions, calories, protein, fibres, fat, sugar, published, Categorie_id, meal_type_id, User_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId], (error, results) => {
     if (error) {
-      console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error('error creating recipe', error);
+      res.status(500).json({ error: 'Internal server error, error creating recipe' });
     } else {
+      // Process the filterIngredients array and perform necessary database operations
+      filterIngredients.forEach((ingredient) => {
+        console.log("Ingredient1:", ingredient.id, ingredient.name, ingredient.amount);
+        // Perform any other operations related to the ingredient, such as inserting into the database
+      });
+
+      const IngredientsToCreate = filterIngredients.filter((ingredient) => !ingredient.id);
+
+      console.log(IngredientsToCreate);
+
+      IngredientsToCreate.forEach(ingredient => {
+        pool.query(`INSERT INTO ingredient (name) VALUES (?)`, [ingredient.name], async (error, ingResults) => {
+        if (error) {
+        console.error('error creating ingredient', error);
+        res.status(500).json({ error: 'Internal server error, error creating ingredient' });
+        }else{
+          return ingResults;
+        }
+        })
+      });
+
+        const getRecipeId = (instructions) => {
+          return new Promise((resolve, reject) => {
+            pool.query(`SELECT id FROM recipe WHERE instructions = ?`, [instructions], (error, results) => {
+              if (error) {
+                console.error('error getting recipeid', error);
+                reject('Internal server error, error getting recipeid');
+              } else {
+                console.log("recipe iddddd:", results);
+                resolve(results);
+              }
+            });
+          });
+        };
+
+        // Usage
+        recipeID = getRecipeId(instructions)
+          .then((recipeIdResults) => {
+            // Further processing with the recipe ID here
+            // You can access the result using recipeIdResults[0].id if it's an array
+            // or recipeIdResults.id if it's a single row
+            // ...
+            console.log("recipeIdResults[0].id", recipeIdResults[0].id);
+            return recipeIdResults[0].id
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            res.status(500).json({ error });
+          });
+
+          //RecipeID
+
+          const getIngredientIdFromDatabase = (ingredient) => {
+            return new Promise((resolve, reject) => {
+              pool.query(
+                `SELECT id, name FROM ingredient WHERE name = ?`,
+                [ingredient.name],
+                (error, results) => {
+                  if (error) {
+                    console.error('Error getting ingredient ID:', error);
+                    reject('Internal server error, unable to retrieve ingredient ID');
+                  } else {
+                    resolve(results);
+                  }
+                }
+              );
+            });
+          };
+
+          const getIngredientIds = async (filterIngredients) => {
+            const ingredientIds = [];
+            for (const ingredient of filterIngredients) {
+              try {
+                const results = await getIngredientIdFromDatabase(ingredient);
+                ingredientIds.push(results);
+              } catch (error) {
+                console.error('Error:', error);
+                throw error;
+              }
+            }
+            return ingredientIds;
+          };
+
+          const ingredientIdsPromise = getIngredientIds(filterIngredients);
+
+          const combinedIngredients = [];
+
+          // Use Promise.all() to wait for both promises to resolve
+          Promise.all([ingredientIdsPromise, filterIngredients])
+            .then(([ingredientIds, filterIngredients]) => {
+              // Iterate over the ingredientIds array
+              for (const ingredientId of ingredientIds) {
+                const id = ingredientId[0].id;
+                const name = ingredientId[0].name;
+
+                // Find the matching ingredient in the filterIngredients array
+                const matchedIngredient = filterIngredients.find(
+                  (filterIngredient) => filterIngredient.name === name
+                );
+
+                // If a match is found, combine the properties and add it to the combinedIngredients array
+                if (matchedIngredient) {
+                  const ingredientName = matchedIngredient.name;
+                  const amount = matchedIngredient.amount;
+                  combinedIngredients.push({ id: id, name: ingredientName, amount: amount });
+                  console.log( "id:", id, "name:", ingredientName, "amount:", amount );
+                }
+              }
+
+              // Use the combinedIngredients array as needed
+              // ...
+              console.log("combinedIngredients", combinedIngredients);
+              recipeID
+                .then((resolvedRecipeID) => {
+                  combinedIngredients.forEach((combinedIngredient) => {
+                    console.log("recipeID", resolvedRecipeID, "combinedIngredient.id", combinedIngredient.id, "combinedIngredient.amount", combinedIngredient.amount);
+                    pool.query(`INSERT INTO recipe_has_ingredient (Recipe_id, Ingredient_id, amount) VALUES (?, ?, ?)`, [resolvedRecipeID, combinedIngredient.id, combinedIngredient.amount], (error, result) => {
+                      if (error) {
+                        console.error('error creating recipe_has_ingredient', error);
+                        /* res.status(500).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
+                      } else {
+                        /* res.status(200).json({ success: 'You have successfully added a Recipe and its dependencies' }); */
+                        return result;
+                      }
+                    });
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  return res.status(500).json({ error }); // Add 'return' statement here
+                });
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              res.status(500).json({ error });
+            });
       res.json(results);
     }
   });
 });
+ 
+
 
 
 app.put('/recipe', verifyJWT, () => {

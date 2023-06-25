@@ -142,65 +142,61 @@ select {
   display: flex;
 }
 
-.ingredients-div-search-show{
-    /* position: absolute; */
-  border-radius: 5px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  display: none;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 90%;
-  min-height: 200px;
+.ingredients-div-search-container{
   display: flex;
-}
-
-.ingredients-div-search-hide{
-    /* position: absolute; */
-  border-radius: 5px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  display: none;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   width: 90%;
-  min-height: 200px;
-  display: none;
 }
 
 .ingredients-div-search {
   /* position: absolute; */
-  border-radius: 5px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-left: 0px;
   background-color: #fff;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 90%;
-  min-height: 200px;
-  display: none;
+  width: 50%;
+  display: flex;
+  overflow:scroll; height:500px;
 }
 
 .ingredients-div-list {
-  border-radius: 5px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-right: 0px;
   background-color: #fff;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 90%;
-  min-height: 200px;
+  width: 50%;
+  overflow:scroll; height:500px;
 }
 
+
+.ingredients-div-search button {
+  color: #fff;
+  border: 5px solid #ffffff;
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+.ingredients-div-list button {
+  color: #fff;
+  border: 5px solid #ffffff;
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+
+.ingredients-div-search button:hover {
+  background-color: #ffdd40;
+}
+
+.ingredients-div-list button:hover {
+  background-color: #ffdd40;
+}
 
 .ingredients-item {
   display: flex;
@@ -211,20 +207,27 @@ select {
   background-color: #6c757d;
   border: 5px solid #ffdd40;
   border-radius: 5px;
+  padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
 .ingredients-item input {
+  margin: 0px;
   margin-left: 20px;
   margin-right: 20px;
-  width: 20%;
+  width: 40%;
+}
+
+.ingredients-item button {
+  min-width: 15%;
 }
 
 .ingredients-item h3 {
+  font-size: 15px;
   margin-left: 20px;
   margin-right: 20px;
-  width: 80%;
+  width: 30%;
 }
 
 .ingredients-div {
@@ -236,8 +239,7 @@ select {
 }
 
 .ingredients-div input {
-  width: 90%;
-  margin-right: 20px;
+  width: 100%;
 }
 
 .ingredients-div button {

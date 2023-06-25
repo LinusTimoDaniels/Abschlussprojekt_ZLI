@@ -198,7 +198,7 @@ export const Recipe = ({ recipe }) => {
             {Object.keys(ingredient).map((item, index) => (
               <li key={index}>
                 {ingredient[item].name} {ingredient[item].amount}
-                {console.log(ingredient[item].name, recipe.mealtype)}
+                {console.log(ingredient[item].name, ingredient)}
               </li>
             ))}
           </ul>

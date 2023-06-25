@@ -19,11 +19,36 @@ export const AddRecipe = () => {
   const [mealtype, setMealtype] = useState("1");
   const [userId, setUserId] = useState(null);
   const [ingredient, setIngredient] = useState({});
-  const [showDiv, setShowDiv] = useState(false);
+  const [ingredientShow, setIngredientShow] = useState({});
+  const [filterIngredient, setFilterIngredient] = useState([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
-    console.log("showDiv:", showDiv);
-  }, [showDiv]);
+    if (!query) {
+      // Display all the ingredients if the query is empty
+      setIngredientShow(ingredient);
+    } else if (query) {
+      // Filters the data based on the query
+      const filteredIngredients = ingredient.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setIngredientShow(filteredIngredients);
+    }
+  }, [query, ingredient]);
+
+  useEffect(() => {
+    if (ingredientShow.length === 0) {
+      console.log("No ingredients found", ingredientShow);
+      if (!ingredientExists(query)) {
+        setIngredientShow((prevData) => [
+          ...prevData,
+          { id: "", name: query, amount: "" },
+        ]);
+      } else {
+        swal("error", "Ingredient already exists in the list.", "error");
+      }
+    }
+  }, [query, ingredient, ingredientShow]);
 
   useEffect(() => {
     console.log("Calories:", calories);
@@ -82,6 +107,11 @@ export const AddRecipe = () => {
     postRecipe(); // Fetches the data again when the form is submitted
   };
 
+  // Function to check if an ingredient already exists in the filterIngredient array
+  const ingredientExists = (ingredientId) => {
+    return filterIngredient.some((item) => item.name === ingredientId);
+  };
+
   useEffect(() => {
     const fetchIngredient = async () => {
       try {
@@ -120,6 +150,19 @@ export const AddRecipe = () => {
       userId: userId,
     };
 
+    const filterIngredients = filterIngredient.map((ing) => {
+      return {
+        id: ing.id,
+        name: ing.name,
+        amount: ing.amount,
+      };
+    });
+
+    const requestBody = {
+      recipeData: recipeData,
+      filterIngredients: filterIngredients,
+    };
+
     const token = JSON.parse(localStorage.getItem("login"));
 
     fetch("http://127.0.0.1:8080/recipe", {
@@ -128,7 +171,7 @@ export const AddRecipe = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(recipeData),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (!response.ok) {
@@ -188,7 +231,7 @@ export const AddRecipe = () => {
           <textarea
             name="instructions"
             id="instructions"
-            rows="10"
+            rows="5"
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
           ></textarea>
@@ -305,25 +348,75 @@ export const AddRecipe = () => {
               type="text"
               name="ingredients"
               id="ingredients"
-              onFocus={() => setShowDiv(true)}
-              onBlur={() => setShowDiv(false)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
-            <button>Add</button>
           </div>
-          <div
-            className={`${
-              showDiv
-                ? "ingredients-div-search-show"
-                : "ingredients-div-search-hide"
-            } ingredients-div-search`}
-          >hallo</div>
-          <div className="ingredients-div-list">
-            {Object.values(ingredient).map((item, index) => (
-              <div className="ingredients-item" key={index}>
-                <h3>{item.name}</h3>
-                <input type="text" />
-              </div>
-            ))}
+          <div className="ingredients-div-search-container">
+            <div className="ingredients-div-search">
+              {Object.values(ingredientShow).map((item, index) => (
+                <div className="ingredients-item" key={index}>
+                  <h3>{item.name}</h3>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (!ingredientExists(item.name)) {
+                        setFilterIngredient((prevData) => [
+                          ...prevData,
+                          { id: item.id, name: item.name, amount: "" },
+                        ]);
+                      } else {
+                        swal(
+                          "error",
+                          "Ingredient already exists in the list.",
+                          "error"
+                        );
+                      }
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="ingredients-div-list">
+              {Object.values(filterIngredient).map((item, index) => (
+                <div className="ingredients-item" key={index}>
+                  <h3>{item.name}</h3>
+                  <input
+                    type="text"
+                    value={item.amount} // Use item.amount instead of filterIngredient.id
+                    onChange={(e) => {
+                      const updatedIngredients = filterIngredient.map(
+                        (ingredientItem) => {
+                          if (ingredientItem.name === item.name) {
+                            console.log("amount", e.target.value);
+                            return {
+                              ...ingredientItem,
+                              amount: e.target.value,
+                            };
+                          }
+                          return ingredientItem;
+                        }
+                      );
+                      setFilterIngredient(updatedIngredients);
+                    }}
+                  />
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const updatedIngredients = filterIngredient.filter(
+                        (item1) => item1.name !== item.name
+                      );
+                      setFilterIngredient(updatedIngredients);
+                    }}
+                  >
+                    -
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
           <input
             type="submit"
