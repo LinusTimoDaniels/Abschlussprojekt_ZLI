@@ -215,8 +215,8 @@ export const UpdateRecipe = ({ recipe }) => {
 
     const token = JSON.parse(localStorage.getItem("login"));
 
-    fetch("http://127.0.0.1:8080/recipe", {
-      method: "POST",
+    fetch(`http://127.0.0.1:8080/recipe?recipe=${recipe.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -231,11 +231,11 @@ export const UpdateRecipe = ({ recipe }) => {
       })
       .then((data) => {
         console.log("Response from server:", data);
-        swal("success", "You have successfully added a recipe!", "success");
+        swal("success", "You have successfully updated a recipe!", "success");
         // Perform any additional actions or handle the response here
         setTimeout(() => {
-          /* window.location = "http://127.0.0.1:3000/myrecipes"; */
-        }, 2000);
+          window.location = "http://127.0.0.1:3000/myrecipes";
+        }, 1000);
       })
       .catch((error) => {
         console.error("Error:", error);

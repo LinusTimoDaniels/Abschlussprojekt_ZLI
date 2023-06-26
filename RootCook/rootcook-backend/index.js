@@ -229,9 +229,200 @@ app.post('/recipe', verifyJWT, async (req, res) => {
 
 
 
-app.put('/recipe', verifyJWT, () => {
+app.put('/recipe', verifyJWT, (req, res) => {
+  const { recipe: recipeID } = req.query;
+  const {
+    title,
+    description,
+    image,
+    instructions,
+    calories,
+    protein,
+    fibres,
+    fat,
+    sugar,
+    published,
+    categorie,
+    mealtype,
+    userId
+  } = req.body.recipeData;
 
+  const filterIngredients = req.body.filterIngredients;
+
+ console.log("filterIngredientsfilterIngredients", filterIngredients);
+
+  console.log(
+    "Recipe",
+    title,
+    description,
+    image,
+    instructions,
+    calories,
+    protein,
+    fibres,
+    fat,
+    sugar,
+    published,
+    categorie,
+    mealtype,
+    userId
+  );
+
+  if (
+    !title ||
+    !description ||
+    !image ||
+    !instructions ||
+    !calories ||
+    !protein ||
+    !fibres ||
+    !fat ||
+    !sugar ||
+    !categorie ||
+    !mealtype ||
+    !userId
+  ) {
+    return res.status(400).json({ error: "Data incomplete" });
+  }
+
+  pool.query(
+    `UPDATE recipe SET title = ?, description = ?, image = ?, instructions = ?, calories = ?, protein = ?, fibres = ?, fat = ?, sugar = ?, published = ?, Categorie_id = ?, meal_type_id = ?, User_id = ? WHERE recipe.id = ?`,
+    [
+      title,
+      description,
+      image,
+      instructions,
+      calories,
+      protein,
+      fibres,
+      fat,
+      sugar,
+      published,
+      categorie,
+      mealtype,
+      userId,
+      recipeID
+    ],
+    (error, results) => {
+      if (error) {
+        console.error('Error creating recipe', error);
+        return res.status(500).json({ error: 'Internal server error, error creating recipe' });
+      } else {
+        // Process the filterIngredients array and perform necessary database operations
+        filterIngredients.forEach((ingredient) => {
+          console.log("Ingredient1:", ingredient.id, ingredient.name, ingredient.amount);
+          // Perform any other operations related to the ingredient, such as inserting into the database
+        });
+
+        const IngredientsToCreate = filterIngredients.filter((ingredient) => !ingredient.id);
+
+        console.log("IngredientsToCreate", IngredientsToCreate);
+
+        IngredientsToCreate.forEach((ingredient) => {
+          pool.query(
+            `INSERT INTO ingredient (name) VALUES (?)`,
+            [ingredient.name],
+            (error, ingResults) => {
+              if (error) {
+                console.error('Error creating ingredient', error);
+                return res.status(500).json({ error: 'Internal server error, error creating ingredient' });
+              } else {
+                // Continue processing if needed
+              }
+            }
+          );
+        });
+
+        pool.query(`DELETE FROM recipe_has_ingredient WHERE Recipe_id = ?`, [recipeID], (error, result) => {
+          if (error) {
+            console.error('Error deleting recipe_has_ingredient', error);
+            return res.status(500).json({ error: 'Internal server error, error deleting recipe_has_ingredient' });
+          } else {
+            // Continue processing if needed
+          }
+        });
+
+        const getIngredientIdFromDatabase = (ingredient) => {
+          return new Promise((resolve, reject) => {
+            pool.query(
+              `SELECT id, name FROM ingredient WHERE name = ?`,
+              [ingredient.name],
+              (error, results) => {
+                if (error) {
+                  console.error('Error getting ingredient ID:', error);
+                  reject('Internal server error, unable to retrieve ingredient ID');
+                } else {
+                  resolve(results);
+                }
+              }
+                        );
+          });
+        };
+
+        const getIngredientIds = async (filterIngredients) => {
+          const ingredientIds = [];
+          for (const ingredient of filterIngredients) {
+            try {
+              const results = await getIngredientIdFromDatabase(ingredient);
+              ingredientIds.push(results);
+            } catch (error) {
+              console.error('Error:', error);
+              throw error;
+            }
+          }
+          return ingredientIds;
+        };
+
+        const ingredientIdsPromise = getIngredientIds(filterIngredients);
+
+        const combinedIngredients = [];
+
+          Promise.all([ingredientIdsPromise, filterIngredients])
+            .then(([ingredientIds, filterIngredients]) => {
+              for (const ingredientId of ingredientIds) {
+                const id = ingredientId[0].id;
+                const name = ingredientId[0].name;
+
+                const matchedIngredient = filterIngredients.find(
+                  (filterIngredient) => filterIngredient.name === name
+                );
+
+                if (matchedIngredient) {
+                  const ingredientName = matchedIngredient.name;
+                  const amount = matchedIngredient.amount;
+                  combinedIngredients.push({ id: id, name: ingredientName, amount: amount });
+                  console.log("id:", id, "name:", ingredientName, "amount:", amount);
+                }
+              }
+
+              combinedIngredients.forEach((combinedIngredient) => {
+                console.log("recipeID", recipeID, "combinedIngredient.id", combinedIngredient.id, "combinedIngredient.amount", combinedIngredient.amount);
+                pool.query(`INSERT INTO recipe_has_ingredient (Recipe_id, Ingredient_id, amount) VALUES (?, ?, ?)`, [recipeID, combinedIngredient.id, combinedIngredient.amount], (error, result) => {
+                  if (error) {
+                    console.error('error creating recipe_has_ingredient', error);
+                    /* res.status(500).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
+                  } else {
+                    /* res.status(200).json({ success: 'You have successfully added a Recipe and its dependencies' }); */
+                    return result;
+                  }
+                });
+              });
+
+              // Continue with any additional processing if needed
+               return res.status(200).json({ results :"Success" });
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              return res.status(500).json({ error });
+            });
+
+      }
+    }
+  );
 });
+
+
+
 
 
 app.delete('/recipe', verifyJWT, (req, res) => {
@@ -441,7 +632,7 @@ app.get('/ingredients/all', verifyJWT, (req, res) => {
 app.get('/recipehasingredient', verifyJWT, (req, res) => {
   const RecipeId = req.query.recipe;
   console.log("RecipeId", RecipeId);
-  pool.query(`SELECT i.name, rhi.amount FROM recipe_has_ingredient AS rhi JOIN Ingredient AS i ON rhi.Ingredient_id = i.id WHERE Recipe_id = ?`, [RecipeId], (error, result) => {
+  pool.query(`SELECT i.id, i.name, rhi.amount FROM recipe_has_ingredient AS rhi JOIN Ingredient AS i ON rhi.Ingredient_id = i.id WHERE Recipe_id = ?`, [RecipeId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
       res.status(500).json({ error: 'Internal server error' });

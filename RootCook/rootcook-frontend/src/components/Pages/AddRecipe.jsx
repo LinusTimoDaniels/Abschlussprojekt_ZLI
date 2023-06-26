@@ -184,8 +184,8 @@ export const AddRecipe = () => {
         swal("success", "You have successfully added a recipe!", "success");
         // Perform any additional actions or handle the response here
         setTimeout(() => {
-          /* window.location = "http://127.0.0.1:3000/myrecipes"; */
-        }, 2000);
+          window.location = "http://127.0.0.1:3000/myrecipes";
+        }, 1000);
       })
       .catch((error) => {
         console.error("Error:", error);

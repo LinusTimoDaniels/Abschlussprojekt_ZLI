@@ -140,7 +140,8 @@ export const MyRecipes = ({ recipe, setRecipe }) => {
                 {console.log(
                   "recipe.categorie_id",
                   recipe.User_id,
-                  recipe.Categorie_id, recipe.title
+                  recipe.Categorie_id,
+                  recipe.title
                 )}
               </NavLink>
               <NavLink
