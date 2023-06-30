@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  database:
+    image: mariadb
+    container_name: rootcook-database
+    hostname: rootcook-database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rootcook
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: root
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    image: ghcr.io/linustimodaniles/rootcook-backend:v3
+    container_name: rootcook-backend
+    hostname: rootcook-backend
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: ghcr.io/linustimodaniels/rootcook-frontend:v3
+    container_name: rootcook-frontend
+    hostname: rootcook-frontend
+    ports:
+      - "3000:3000"

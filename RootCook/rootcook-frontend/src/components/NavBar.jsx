@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 import "./NavBar.css";
+import swal from "sweetalert";
 
 function NavBar() {
   const [click, setClick] = useState(false);
@@ -19,12 +20,17 @@ function NavBar() {
           // console.log(document.cookie);
           Cookies.remove("jwt");
           console.log("User logged out successfully");
+          swal("success", "User logged out successfully", "success");
+          setTimeout(() => {
+            window.location = "/";
+          }, 1000);
         } else {
           throw new Error("Logout failed");
         }
       })
       .catch((error) => {
         console.error("Error logging out:", error);
+        swal("error", "Error logging out:", "error");
       });
   };
 

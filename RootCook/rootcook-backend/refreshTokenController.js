@@ -11,7 +11,7 @@ const handleRefreshToken = (req, res) => {
   pool.query('SELECT * FROM user WHERE REFRESH_TOKEN = ?', [refreshToken], (error, results) => {
     if (error) {
       console.error('Error executing query:', error.message);
-      return res.sendStatus(500);
+      return res.sendStatus(8080);
     }
 
     const foundUser = results[0];

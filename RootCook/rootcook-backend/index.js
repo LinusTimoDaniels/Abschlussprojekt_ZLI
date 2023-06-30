@@ -2,7 +2,6 @@ const express = require('express');
 const pool = require('./database');
 const app = express();
 const PORT = 8080;
-const IP_ADDRESS = '127.0.0.1';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -25,7 +24,7 @@ app.use(express.json());
 
 // Enable CORS for all routes
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Include 'Authorization' header
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -48,7 +47,7 @@ app.get('/recipe', (req, res) => {
   pool.query(Query, [UserId], (error, results) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(results);
     }
@@ -83,7 +82,7 @@ app.post('/recipe', verifyJWT, async (req, res) => {
   pool.query(`INSERT INTO recipe (title, description, image, instructions, calories, protein, fibres, fat, sugar, published, Categorie_id, meal_type_id, User_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [title, description, image, instructions, calories, protein, fibres, fat, sugar, published, categorie, mealtype, userId], (error, results) => {
     if (error) {
       console.error('error creating recipe', error);
-      res.status(500).json({ error: 'Internal server error, error creating recipe' });
+      res.status(8080).json({ error: 'Internal server error, error creating recipe' });
     } else {
       // Process the filterIngredients array and perform necessary database operations
       filterIngredients.forEach((ingredient) => {
@@ -99,7 +98,7 @@ app.post('/recipe', verifyJWT, async (req, res) => {
         pool.query(`INSERT INTO ingredient (name) VALUES (?)`, [ingredient.name], async (error, ingResults) => {
         if (error) {
         console.error('error creating ingredient', error);
-        res.status(500).json({ error: 'Internal server error, error creating ingredient' });
+        res.status(8080).json({ error: 'Internal server error, error creating ingredient' });
         }else{
           return ingResults;
         }
@@ -132,7 +131,7 @@ app.post('/recipe', verifyJWT, async (req, res) => {
           })
           .catch((error) => {
             console.error('Error:', error);
-            res.status(500).json({ error });
+            res.status(8080).json({ error });
           });
 
           //RecipeID
@@ -204,7 +203,7 @@ app.post('/recipe', verifyJWT, async (req, res) => {
                     pool.query(`INSERT INTO recipe_has_ingredient (Recipe_id, Ingredient_id, amount) VALUES (?, ?, ?)`, [resolvedRecipeID, combinedIngredient.id, combinedIngredient.amount], (error, result) => {
                       if (error) {
                         console.error('error creating recipe_has_ingredient', error);
-                        /* res.status(500).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
+                        /* res.status(8080).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
                       } else {
                         /* res.status(200).json({ success: 'You have successfully added a Recipe and its dependencies' }); */
                         return result;
@@ -214,12 +213,12 @@ app.post('/recipe', verifyJWT, async (req, res) => {
                 })
                 .catch((error) => {
                   console.error("Error:", error);
-                  return res.status(500).json({ error }); // Add 'return' statement here
+                  return res.status(8080).json({ error }); // Add 'return' statement here
                 });
             })
             .catch((error) => {
               console.error("Error:", error);
-              res.status(500).json({ error });
+              res.status(8080).json({ error });
             });
       res.json(results);
     }
@@ -306,7 +305,7 @@ app.put('/recipe', verifyJWT, (req, res) => {
     (error, results) => {
       if (error) {
         console.error('Error creating recipe', error);
-        return res.status(500).json({ error: 'Internal server error, error creating recipe' });
+        return res.status(8080).json({ error: 'Internal server error, error creating recipe' });
       } else {
         // Process the filterIngredients array and perform necessary database operations
         filterIngredients.forEach((ingredient) => {
@@ -325,7 +324,7 @@ app.put('/recipe', verifyJWT, (req, res) => {
             (error, ingResults) => {
               if (error) {
                 console.error('Error creating ingredient', error);
-                return res.status(500).json({ error: 'Internal server error, error creating ingredient' });
+                return res.status(8080).json({ error: 'Internal server error, error creating ingredient' });
               } else {
                 // Continue processing if needed
               }
@@ -336,7 +335,7 @@ app.put('/recipe', verifyJWT, (req, res) => {
         pool.query(`DELETE FROM recipe_has_ingredient WHERE Recipe_id = ?`, [recipeID], (error, result) => {
           if (error) {
             console.error('Error deleting recipe_has_ingredient', error);
-            return res.status(500).json({ error: 'Internal server error, error deleting recipe_has_ingredient' });
+            return res.status(8080).json({ error: 'Internal server error, error deleting recipe_has_ingredient' });
           } else {
             // Continue processing if needed
           }
@@ -400,7 +399,7 @@ app.put('/recipe', verifyJWT, (req, res) => {
                 pool.query(`INSERT INTO recipe_has_ingredient (Recipe_id, Ingredient_id, amount) VALUES (?, ?, ?)`, [recipeID, combinedIngredient.id, combinedIngredient.amount], (error, result) => {
                   if (error) {
                     console.error('error creating recipe_has_ingredient', error);
-                    /* res.status(500).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
+                    /* res.status(8080).json({ error: 'Internal server error, error creating recipe_has_ingredient' }); */
                   } else {
                     /* res.status(200).json({ success: 'You have successfully added a Recipe and its dependencies' }); */
                     return result;
@@ -413,7 +412,7 @@ app.put('/recipe', verifyJWT, (req, res) => {
             })
             .catch((error) => {
               console.error("Error:", error);
-              return res.status(500).json({ error });
+              return res.status(8080).json({ error });
             });
 
       }
@@ -430,7 +429,7 @@ app.delete('/recipe', verifyJWT, (req, res) => {
     pool.query(`DELETE FROM recipe WHERE recipe.id = ?`, [recipeId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -446,14 +445,14 @@ app.post('/login', (req, res) => {
     (error, results) => {
       if (error) {
         console.error('Error executing query:', error.message);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(8080).json({ error: 'Internal server error' });
       } else {
         if (results.length > 0) {
           const user = results[0];
           bcrypt.compare(password, user.password, (bcryptError, bcryptResult) => {
             if (bcryptError) {
               console.error('Error comparing passwords:', bcryptError);
-              res.status(500).json({ error: 'Internal server error' });
+              res.status(8080).json({ error: 'Internal server error' });
             } else {
               if (bcryptResult) {
                 const userData = {
@@ -478,7 +477,7 @@ app.post('/login', (req, res) => {
                   (updateError, updateResult) => {
                     if (updateError) {
                       console.error('Error updating tokens:', updateError.message);
-                      return res.sendStatus(500);
+                      return res.sendStatus(8080);
                     }
                     console.log('Tokens updated in the database:', updateResult);
                     console.log(accessToken, refreshToken);
@@ -521,7 +520,7 @@ app.post('/register', (req, res) => {
     (error, result) => {
       if (error) {
         console.error('Error executing query', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(8080).json({ error: 'Internal server error' });
       } else {
         if (result.length > 0) {
           // User already exists
@@ -535,7 +534,7 @@ app.post('/register', (req, res) => {
               (error, result) => {
                 if (error) {
                   console.error('Error executing query', error);
-                  res.status(500).json({ error: 'Internal server error' });
+                  res.status(8080).json({ error: 'Internal server error' });
                 } else {
                   console.log('User registered:', result);
                   res.json("USER REGISTERED");
@@ -557,7 +556,7 @@ app.get('/user', verifyJWT, (req, res) => {
   pool.query(`SELECT id, username FROM user WHERE REFRESH_TOKEN = ?`, [cookie], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -570,7 +569,7 @@ app.get('/bookmarks', verifyJWT, (req, res) => {
     pool.query(`SELECT r.*, meal_type.type FROM Recipe AS r JOIN Bookmarks AS b ON r.id = b.Recipe_id JOIN meal_type ON r.meal_type_id = meal_type.id WHERE b.User_id = ?`, [UserId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       console.log(result);
       res.json(result);
@@ -584,7 +583,7 @@ app.post('/bookmarks', verifyJWT, (req, res) => {
     pool.query(`INSERT INTO bookmarks (Recipe_id, User_id) VALUES ( ?, ?)`, [RecipeId, UserId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -598,19 +597,19 @@ app.delete('/bookmarks', verifyJWT, (req, res) => {
     pool.query(`DELETE FROM bookmarks WHERE Recipe_id = ? AND User_id = ?`, [RecipeId, UserId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
   });
 });
 
-app.get('/ingredients', verifyJWT, (req, res) => {
+app.get('/ingredients', (req, res) => {
   const RecipeId = req.query.recipe;
     pool.query(`SELECT i.id, i.name, rhi.amount FROM Recipe r JOIN Recipe_has_Ingredient rhi ON r.id = rhi.Recipe_id JOIN Ingredient i ON rhi.Ingredient_id = i.id WHERE r.id = ?`, [RecipeId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -622,7 +621,7 @@ app.get('/ingredients/all', verifyJWT, (req, res) => {
     pool.query(`SELECT * FROM Ingredient`, (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -635,7 +634,7 @@ app.get('/recipehasingredient', verifyJWT, (req, res) => {
   pool.query(`SELECT i.id, i.name, rhi.amount FROM recipe_has_ingredient AS rhi JOIN Ingredient AS i ON rhi.Ingredient_id = i.id WHERE Recipe_id = ?`, [RecipeId], (error, result) => {
     if (error) {
       console.error('Error executing query', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(8080).json({ error: 'Internal server error' });
     } else {
       res.json(result);
     }
@@ -643,6 +642,6 @@ app.get('/recipehasingredient', verifyJWT, (req, res) => {
 })
 
 
-app.listen(PORT, IP_ADDRESS, () => {
-  console.log(`Server is running on ${IP_ADDRESS}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on :${PORT}`);
 });

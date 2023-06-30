@@ -16,7 +16,7 @@ const handleLogout = (req, res) => {
   pool.query('SELECT * FROM user WHERE REFRESH_TOKEN = ?', [refreshToken], async (error, results) => {
     if (error) {
       console.error('Error executing query:', error.message);
-      return res.sendStatus(500);
+      return res.sendStatus(8080);
     }
 
     const foundUser = results[0];
@@ -30,7 +30,7 @@ const handleLogout = (req, res) => {
     pool.query('UPDATE user SET REFRESH_TOKEN = ? WHERE id = ?', ['', foundUser.id], async (updateError) => {
       if (updateError) {
         console.error('Error updating refreshToken:', updateError.message);
-        return res.sendStatus(500);
+        return res.sendStatus(8080);
       }
       // console.log("refreshToken: Deleting cookie");
       // TODO : Cookies.remove('name')

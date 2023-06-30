@@ -132,6 +132,11 @@ export const Home = ({ setRecipe }) => {
 
   // Applies filters and sorts the data based on the filter criteria
   const applyFiltersAndSort = () => {
+    if (!data || typeof data !== "object") {
+      console.error("Invalid data:", data);
+      return;
+    }
+
     let tempData = [...data];
 
     if (filter.query) {

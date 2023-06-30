@@ -159,7 +159,7 @@ select {
   align-items: center;
   width: 50%;
   display: flex;
-  overflow:scroll; height:500px;
+  overflow:scroll; height:500;
 }
 
 .ingredients-div-list {
@@ -171,7 +171,7 @@ select {
   justify-content: center;
   align-items: center;
   width: 50%;
-  overflow:scroll; height:500px;
+  overflow:scroll; height:500;
 }
 
 
