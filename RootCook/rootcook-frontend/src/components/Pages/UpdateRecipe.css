@@ -15,7 +15,7 @@
   align-items: center;
   margin: 50px;
   width: 60%;
-  min-height: 1500px;
+  min-height:1500px;
   background: #6c757d;
   border-radius: 5px;
 }
@@ -159,7 +159,7 @@ select {
   align-items: center;
   width: 50%;
   display: flex;
-  overflow:scroll; height:500;
+  overflow:scroll; height:500px;
 }
 
 .ingredients-div-list {
@@ -171,7 +171,7 @@ select {
   justify-content: center;
   align-items: center;
   width: 50%;
-  overflow:scroll; height:500;
+  overflow:scroll; height:500px;
 }
 
 

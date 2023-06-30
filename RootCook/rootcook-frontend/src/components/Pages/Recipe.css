@@ -24,6 +24,10 @@
 }
 
 .recipe-description-1 h3{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
   font-size: 20px;
   padding: 10px;
 }
@@ -128,6 +132,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .recipe-ingredients{
